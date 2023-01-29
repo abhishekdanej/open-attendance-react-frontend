@@ -1,37 +1,50 @@
-import { useEffect, useState } from "react";
-
 export default function AttendanceCard(value) {
 
-
     
+    var officeList = [];
+    var meetingList = [];
+    var anywhereList = [];
+
     if (value) {
 
         console.log("Got Object: " + value['value'].length);
-    
+
         // console.log("Got list: " + JSON.stringify(value));
         // const obj = JSON.parse(JSON.stringify(value))['value'];
         // console.log("List length: " + obj.length);
-    
-        var officeList = []; 
-        var meetingList = []; 
-        var anywhereList = []; 
-    
+
+
         var list = value['value'];
-        for(const item of list) {
+        for (const item of list) {
             console.log("checking: " + JSON.stringify(item));
-            if(item.WorkLocation==='Office'){ 
+            if (item.WorkLocation === 'Office') {
                 officeList.push(item);
             }
-            if(item.WorkLocation==='Anywhere'){ 
+            if (item.WorkLocation === 'Anywhere') {
                 anywhereList.push(item);
             }
-            if(item.WorkLocation==='Meeting'){ 
+            if (item.WorkLocation === 'Meeting') {
                 meetingList.push(item);
             }
         }
-    
+
+        //  <li class="list-group-item fs-5">Person A</li>
+        
         console.log("Office list size: " + officeList.length);
     }
+
+
+    const officeListItems = officeList.map(record =>
+        <li key={record.SK} className="list-group-item fs-5">{record.SK}</li>
+    )
+
+    const anywhereListItems = anywhereList.map(record =>
+        <li key={record.SK} className="list-group-item fs-5">{record.SK}</li>
+    )
+
+    const meetingListItems = meetingList.map(record =>
+        <li key={record.SK} className="list-group-item fs-5">{record.SK}</li>
+    )
 
     return (
 
@@ -43,20 +56,17 @@ export default function AttendanceCard(value) {
                 <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Office
                     <span class="badge bg-primary rounded-pill">{officeList.length}</span>
                 </li>
-                <li class="list-group-item fs-5">Person A</li>
-                <li class="list-group-item fs-5">A third item</li>
+                {officeListItems}
 
                 <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Meeting
                     <span class="badge bg-primary rounded-pill">{meetingList.length}</span>
                 </li>
-                <li class="list-group-item fs-5">A second item</li>
-                <li class="list-group-item fs-5">A third item</li>
-                
+                {meetingListItems}
+
                 <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Anywhere
                     <span class="badge bg-primary rounded-pill">{anywhereList.length}</span>
                 </li>
-                <li class="list-group-item fs-5">A second item</li>
-                <li class="list-group-item fs-5">A third item</li>
+                {anywhereListItems}
 
 
             </ul>

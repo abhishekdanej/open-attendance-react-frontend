@@ -2,7 +2,6 @@ import Button from "./Button";
 import MailInput from "./MailInput";
 import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
-import AttendanceConfirmAlert from "./AttendanceConfirmAlert";
 
 function App() {
 
@@ -129,7 +128,11 @@ function App() {
 
     fetch("https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/", requestOptions)
       .then(response => response.text())
-      .then(result => alert(JSON.parse(result).body))
+      .then((result) => {
+        console.log(JSON.parse(result).body);
+        // alert(JSON.parse(result).body)
+      }
+      )
       .catch(error => console.log('error', error));
 
 
