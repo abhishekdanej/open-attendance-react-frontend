@@ -14,13 +14,20 @@ function App() {
 
   useEffect(() => {
 
-    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?mail=ad@gmail.com";
+    const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    let today = new Date()
+
+    const day = today.toString().substring(0, 3)
+
+    let formatted_date = day + "-" + today.getDate() + "-" + months[today.getMonth()] + "-" + today.getFullYear()
+
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + formatted_date;
 
     // working
     fetch(url)
-    .then(response => response.json())
-    .then(result => console.log(result.body))
-    .catch(error => console.log('error', error));
+      .then(response => response.json())
+      .then(result => console.log(result.body))
+      .catch(error => console.log('error', error));
 
     //working
     // fetch(urlat )
