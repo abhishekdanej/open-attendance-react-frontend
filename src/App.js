@@ -1,6 +1,7 @@
 import Button from "./Button";
 import MailInput from "./MailInput";
 import { useState, useEffect } from "react";
+import AttendanceCard from "./AttendanceCard";
 
 function App() {
 
@@ -9,7 +10,16 @@ function App() {
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   // const [mail, setMail] = useState(null);
 
+  const [todaysAttendance, setTodaysAttendance] = useState(null);
 
+  useEffect(() => {
+    if(mail) {
+      getAttendanceData();
+    }
+  },[mail, pressedButton]);
+
+  /*
+  // need to see why getting called when app loads for first time
   useEffect(() => {
 
     const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -27,10 +37,13 @@ function App() {
         console.log(result.body)
         for (const item of result.body) {
           console.log(item.SK, ' comparing with ', mail, formatted_date);
+          // setTodaysAttendance(result.body);
 
           if (item.SK === mail && item.PK === formatted_date) {
             console.log("Attendance is already marked for " + mail);
-            setPressedButton(item.WorkLocation);
+            if(pressedButton !== item.WorkLocation) {
+              setPressedButton(item.WorkLocation);
+            }
             break;
           }
         }
@@ -54,7 +67,9 @@ function App() {
     //   )
 
 
-  })
+  }, [pressedButton])
+*/
+
 
 
   // useEffect(() => {
@@ -116,13 +131,50 @@ function App() {
       .then(result => alert(JSON.parse(result).body))
       .catch(error => console.log('error', error));
 
+
+
+  }
+
+  function getAttendanceData() {
+
+    console.log("Getteng attendance data from server");
+
+    const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    let today = new Date()
+    const day = today.toString().substring(0, 3)
+    let formatted_date = day + "-" + today.getDate() + "-" + months[today.getMonth()] + "-" + today.getFullYear();
+    formatted_date = formatted_date.toUpperCase();
+
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + formatted_date;
+
+    // working
+    fetch(url)
+      .then(response => response.json())
+      .then((result) => {
+        console.log(result.body);
+        setTodaysAttendance(result.body);
+        for (const item of result.body) {
+          console.log(item.SK, 'comparing with', mail, formatted_date);
+          // setTodaysAttendance(result.body);
+
+          if (item.SK === mail && item.PK === formatted_date) {
+            console.log("Attendance is already marked for " + mail);
+            setPressedButton(item.WorkLocation);
+            break;
+          }
+        }
+
+      })
+      .catch(error => console.log('error', error));
+
   }
 
   function handleMailClick(payload) {
 
     setMail(payload);
     localStorage.setItem('mail', JSON.stringify(payload));
-    console.log('App mail: ' + payload);
+    console.log('User input mail: ' + payload);
+    //getAttendanceData();
     // localStorage.setItem('mail', payload);
 
   }
@@ -146,8 +198,13 @@ function App() {
       <div className="container">
 
 
+
         {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
+        }
+
+        {mail &&
+          <AttendanceCard value={todaysAttendance}></AttendanceCard>
         }
 
         {mail &&
