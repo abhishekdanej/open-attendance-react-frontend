@@ -2,6 +2,7 @@ import Button from "./Button";
 import MailInput from "./MailInput";
 import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
+import AttendanceConfirmAlert from "./AttendanceConfirmAlert";
 
 function App() {
 
@@ -137,7 +138,7 @@ function App() {
 
   function getAttendanceData() {
 
-    console.log("Getteng attendance data from server");
+    console.log("Getting attendance data from server");
 
     const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     let today = new Date()
@@ -191,7 +192,7 @@ function App() {
     <div className="App" >
 
       <nav className="navbar navbar-light bg-light">
-        <span className="navbar-brand mb-0 h2 p-2">Open Attendance</span>
+        <span className="navbar-brand mb-0 h1 fs-3 p-2">Open Attendance</span>
         <span className="mb-0 p-2">{mail}</span>
       </nav>
 

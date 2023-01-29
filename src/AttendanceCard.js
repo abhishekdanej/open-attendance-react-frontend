@@ -40,19 +40,19 @@ export default function AttendanceCard(value) {
             <h5 class="card-header">Mumbai</h5>
 
             <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fw-semibold">Office
+                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Office
                     <span class="badge bg-primary rounded-pill">{officeList.length}</span>
                 </li>
                 <li class="list-group-item fs-5">Person A</li>
                 <li class="list-group-item fs-5">A third item</li>
 
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fw-semibold">Meeting
+                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Meeting
                     <span class="badge bg-primary rounded-pill">{meetingList.length}</span>
                 </li>
                 <li class="list-group-item fs-5">A second item</li>
                 <li class="list-group-item fs-5">A third item</li>
                 
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fw-semibold">Anywhere
+                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Anywhere
                     <span class="badge bg-primary rounded-pill">{anywhereList.length}</span>
                 </li>
                 <li class="list-group-item fs-5">A second item</li>
