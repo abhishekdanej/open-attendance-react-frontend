@@ -14,13 +14,13 @@ function MailInput({onMailSubmit}) {
 
     return (
 
-        <div class="mb-3">
+        <div className="mb-3">
             <br/>
-            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <label for="exampleFormControlInput1" className="form-label">Email address</label>
             <br/>
-            <input type="email" class="form-control" onChange={(e) => setMail(e.target.value)} id="exampleFormControlInput1" placeholder="name@opentext.com"/>
+            <input type="email" className="form-control" onChange={(e) => setMail(e.target.value)} id="exampleFormControlInput1" placeholder="name@opentext.com"/>
             <br/>
-            <button type="submit" class="btn btn-primary mb-1" onClick={() => onMailSubmit(mail)}>Confirm identity</button>
+            <button type="submit" className="btn btn-primary mb-1" onClick={() => onMailSubmit(mail)}>Confirm identity</button>
         </div>
 
     );
