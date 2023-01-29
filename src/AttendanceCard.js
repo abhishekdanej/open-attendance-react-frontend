@@ -2,31 +2,36 @@ import { useEffect, useState } from "react";
 
 export default function AttendanceCard(value) {
 
-    console.log("Got Object: " + value['value'].length);
 
-    // console.log("Got list: " + JSON.stringify(value));
-    // const obj = JSON.parse(JSON.stringify(value))['value'];
-    // console.log("List length: " + obj.length);
+    
+    if (value) {
 
-    var officeList = []; 
-    var meetingList = []; 
-    var anywhereList = []; 
-
-    var list = value['value'];
-    for(const item of list) {
-        console.log("checking: " + JSON.stringify(item));
-        if(item.WorkLocation==='Office'){ 
-            officeList.push(item);
+        console.log("Got Object: " + value['value'].length);
+    
+        // console.log("Got list: " + JSON.stringify(value));
+        // const obj = JSON.parse(JSON.stringify(value))['value'];
+        // console.log("List length: " + obj.length);
+    
+        var officeList = []; 
+        var meetingList = []; 
+        var anywhereList = []; 
+    
+        var list = value['value'];
+        for(const item of list) {
+            console.log("checking: " + JSON.stringify(item));
+            if(item.WorkLocation==='Office'){ 
+                officeList.push(item);
+            }
+            if(item.WorkLocation==='Anywhere'){ 
+                anywhereList.push(item);
+            }
+            if(item.WorkLocation==='Meeting'){ 
+                meetingList.push(item);
+            }
         }
-        if(item.WorkLocation==='Anywhere'){ 
-            anywhereList.push(item);
-        }
-        if(item.WorkLocation==='Meeting'){ 
-            meetingList.push(item);
-        }
+    
+        console.log("Office list size: " + officeList.length);
     }
-
-    console.log("Office list size: " + officeList.length);
 
     return (
 

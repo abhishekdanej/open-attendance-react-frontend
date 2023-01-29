@@ -10,7 +10,7 @@ function App() {
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   // const [mail, setMail] = useState(null);
 
-  const [todaysAttendance, setTodaysAttendance] = useState(null);
+  const [todaysAttendance, setTodaysAttendance] = useState([]);
 
   useEffect(() => {
     if(mail) {
