@@ -191,7 +191,8 @@ function App() {
     <div className="App" >
 
       <nav className="navbar navbar-light bg-light">
-        <span className="navbar-brand mb-0 h1 p-2">Open Attendance</span>
+        <span className="navbar-brand mb-0 h2 p-2">Open Attendance</span>
+        <span className="mb-0 p-2">{mail}</span>
       </nav>
 
 
