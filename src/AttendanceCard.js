@@ -49,21 +49,21 @@ export default function AttendanceCard(value) {
     return (
 
 
-        < div class="card text-bg-light mb-3"  >
-            <h5 class="card-header">Mumbai</h5>
+        < div class="card text-bg-primary mb-3"  >
+            <h5 class="card-header">India</h5>
 
             <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Office
+                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
                     <span class="badge bg-primary rounded-pill">{officeList.length}</span>
                 </li>
                 {officeListItems}
 
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Meeting
+                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
                     <span class="badge bg-primary rounded-pill">{meetingList.length}</span>
                 </li>
                 {meetingListItems}
 
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success fs-4 fw-semibold">Anywhere
+                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Anywhere
                     <span class="badge bg-primary rounded-pill">{anywhereList.length}</span>
                 </li>
                 {anywhereListItems}

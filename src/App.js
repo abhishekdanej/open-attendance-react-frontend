@@ -6,7 +6,7 @@ import AttendanceCard from "./AttendanceCard";
 function App() {
 
 
-  const [pressedButton, setPressedButton] = useState(JSON.parse(localStorage.getItem('pressedButton')) || null);
+  const [pressedButton, setPressedButton] = useState();
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   // const [mail, setMail] = useState(null);
 
@@ -110,11 +110,15 @@ function App() {
   function storeAttendance(payload) {
 
     setPressedButton(payload);
-    var myHeaders = new Headers();
     // add content type header to object
+    var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     // using built in JSON utility package turn object to string and store in a variable
-    var raw = JSON.stringify({ "mail": mail, "workLocation": payload });
+    var raw = JSON.stringify({ 
+      "mail": mail, 
+      "workLocation": payload,
+      "date": getFormattedDate()
+    });
     // create a JSON object with parameters for API call and store in a variable
     var requestOptions = {
       method: 'POST',
@@ -139,9 +143,8 @@ function App() {
 
   }
 
-  function getAttendanceData() {
 
-    console.log("Getting attendance data from server");
+  function getFormattedDate() {
 
     const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     let today = new Date()
@@ -149,7 +152,16 @@ function App() {
     let formatted_date = day + "-" + today.getDate() + "-" + months[today.getMonth()] + "-" + today.getFullYear();
     formatted_date = formatted_date.toUpperCase();
 
-    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + formatted_date;
+    return formatted_date;
+  }
+
+  function getAttendanceData() {
+
+    console.log("Getting attendance data from server");
+
+    const fDate = getFormattedDate();
+
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate ;
 
     // working
     fetch(url)
@@ -158,10 +170,10 @@ function App() {
         console.log(result.body);
         setTodaysAttendance(result.body);
         for (const item of result.body) {
-          console.log(item.SK, 'comparing with', mail, formatted_date);
+          console.log(item.SK, 'comparing with', mail, fDate);
           // setTodaysAttendance(result.body);
 
-          if (item.SK === mail && item.PK === formatted_date) {
+          if (item.SK === mail && item.PK === fDate) {
             console.log("Attendance is already marked for " + mail);
             setPressedButton(item.WorkLocation);
             break;
@@ -194,7 +206,7 @@ function App() {
 
     <div className="App" >
 
-      <nav className="navbar navbar-light bg-light">
+      <nav className="navbar">
         <span className="navbar-brand mb-0 h1 fs-3 p-2">Open Attendance</span>
         <span className="mb-0 p-2">{mail}</span>
       </nav>
