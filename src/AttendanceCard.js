@@ -35,22 +35,22 @@ export default function AttendanceCard(value) {
 
 
     const officeListItems = officeList.map(record =>
-        <li key={record.SK} className="list-group-item fs-5">{record.SK}</li>
+        <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
     )
 
     const anywhereListItems = anywhereList.map(record =>
-        <li key={record.SK} className="list-group-item fs-5">{record.SK}</li>
+        <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
     )
 
     const meetingListItems = meetingList.map(record =>
-        <li key={record.SK} className="list-group-item fs-5">{record.SK}</li>
+        <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
     )
 
     return (
 
 
         < div class="card text-bg-primary mb-3"  >
-            <h5 class="card-header">India</h5>
+            <h5 class="card-header fs-3">India</h5>
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office

@@ -2,6 +2,7 @@ import Button from "./Button";
 import MailInput from "./MailInput";
 import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
+import Navbar from "./Navbar";
 
 function App() {
 
@@ -13,109 +14,22 @@ function App() {
   const [todaysAttendance, setTodaysAttendance] = useState([]);
 
   useEffect(() => {
-    if(mail) {
+    if (mail) {
+      console.log("In useEffect");
       getAttendanceData();
     }
-  },[mail, pressedButton]);
-
-  /*
-  // need to see why getting called when app loads for first time
-  useEffect(() => {
-
-    const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-    let today = new Date()
-    const day = today.toString().substring(0, 3)
-    let formatted_date = day + "-" + today.getDate() + "-" + months[today.getMonth()] + "-" + today.getFullYear();
-    formatted_date = formatted_date.toUpperCase();
-
-    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + formatted_date;
-
-    // working
-    fetch(url)
-      .then(response => response.json())
-      .then((result) => {
-        console.log(result.body)
-        for (const item of result.body) {
-          console.log(item.SK, ' comparing with ', mail, formatted_date);
-          // setTodaysAttendance(result.body);
-
-          if (item.SK === mail && item.PK === formatted_date) {
-            console.log("Attendance is already marked for " + mail);
-            if(pressedButton !== item.WorkLocation) {
-              setPressedButton(item.WorkLocation);
-            }
-            break;
-          }
-        }
-
-      })
-      .catch(error => console.log('error', error));
-
-
-
-    //working
-    // fetch(urlat )
-    //   .then(res => res.json())
-    //   .then(
-    //     (result) => {
-    //       console.log(result.body.PK);
-    //     },
-
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   )
-
-
-  }, [pressedButton])
-*/
-
-
-
-  // useEffect(() => {
-  //   localStorage.setItem('mail', JSON.stringify(mail));
-  // }, [mail]);
-
-  /*
-  useEffect(() => {
-    localStorage.setItem('pressedButton', JSON.stringify(pressedButton));
-
-    var myHeaders = new Headers();
-    // add content type header to object
-    myHeaders.append("Content-Type", "application/json");
-    // using built in JSON utility package turn object to string and store in a variable
-    var raw = JSON.stringify({ "mail": mail, "workLocation": pressedButton });
-    // create a JSON object with parameters for API call and store in a variable
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
-    // make API call with parameters and use promises to get response
-    if (mail && pressedButton && false) {
-
-      fetch("https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/", requestOptions)
-        .then(response => response.text())
-        .then(result => alert(JSON.parse(result).body))
-        .catch(error => console.log('error', error));
-
-    }
-
-
-  }, [pressedButton]);
-  */
+  }, [mail, pressedButton]);
 
 
   function storeAttendance(payload) {
 
-    setPressedButton(payload);
+    // setPressedButton(payload);
     // add content type header to object
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     // using built in JSON utility package turn object to string and store in a variable
-    var raw = JSON.stringify({ 
-      "mail": mail, 
+    var raw = JSON.stringify({
+      "mail": mail,
       "workLocation": payload,
       "date": getFormattedDate()
     });
@@ -128,16 +42,17 @@ function App() {
     };
     // make API call with parameters and use promises to get response
 
-    console.log("POST to store attendance: ", raw);
+    console.log("POST to save attendance: ", raw);
 
     fetch("https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/", requestOptions)
       .then(response => response.text())
       .then((result) => {
         console.log(JSON.parse(result).body);
+        setPressedButton(payload);
         // alert(JSON.parse(result).body)
       }
       )
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('FAILED to POST attendance, error:', error));
 
 
 
@@ -161,7 +76,7 @@ function App() {
 
     const fDate = getFormattedDate();
 
-    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate ;
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
 
     // working
     fetch(url)
@@ -206,15 +121,9 @@ function App() {
 
     <div className="App" >
 
-      <nav className="navbar">
-        <span className="navbar-brand mb-0 h1 fs-3 p-2">Open Attendance</span>
-        <span className="mb-0 p-2">{mail}</span>
-      </nav>
-
+      <Navbar mail={mail}></Navbar>
 
       <div className="container">
-
-
 
         {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
