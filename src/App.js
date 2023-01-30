@@ -7,7 +7,7 @@ import MessageToast from "./MessageToast";
 
 function App() {
 
-  const [userLocation, setUserLocation] = useState();
+  // const [userLocation, setUserLocation] = useState();
 
   const [pressedButton, setPressedButton] = useState();
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
@@ -16,6 +16,7 @@ function App() {
   const [todaysAttendance, setTodaysAttendance] = useState([]);
   const [showFlag, setShowFlag] = useState(null);
 
+  /*
   useEffect(() => {
 
     console.log("IDENTIFYING user location.");
@@ -31,12 +32,12 @@ function App() {
       .catch(error => console.log("FAILED to get user's location:", error));
 
   }, [userLocation]);
+  */
 
 
   useEffect(() => {
     if (mail) {
       console.log("In useEffect - mail");
-      // console.log("User city:", userLocation);
       getAttendanceData();
     }
   }, [mail]);
@@ -81,12 +82,26 @@ function App() {
 
   function updateLocalAttendance(payload) {
     console.log("Updating internal attendance, after button-press event", payload);
+    var matchFlag = false;
     for (const item of todaysAttendance) {
       console.log(item);
+      if (item.SK === mail) {
+        matchFlag = true;
+      }
       if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
         console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
         item.WorkLocation = payload;
+        matchFlag = true;
       }
+    }
+    if (!matchFlag) {
+      // insert new entry
+      var obj = {
+        "SK": mail,
+        "WorkLocation": payload,
+        "PK": getFormattedDate()
+      }
+      todaysAttendance.push(obj);
     }
   }
 
@@ -183,7 +198,7 @@ function App() {
 
       <div className="container">
         <nav className="navbar justify-content-center">
-          <div class="badge bg-secondary text-wrap">
+          <div className="badge bg-secondary text-wrap">
             {getUserFormattedDate()}
           </div>
         </nav>
@@ -199,7 +214,7 @@ function App() {
         }
 
         {mail &&
-          <nav className="navbar fixed-bottom justify-content-center navbar-light bg-dark">
+          <nav className="navbar sticky-bottom justify-content-center navbar-light bg-dark">
             <Button name="Office" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
             <Button name="Anywhere" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
             <Button name="Meeting" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />

@@ -45,22 +45,22 @@ export default function AttendanceCard(value) {
 
     return (
 
-        < div class="card text-bg-primary mb-3"  >
-            <h5 class="card-header fs-3">India</h5>
+        < div className="card text-bg-primary mb-3"  >
+            <h5 className="card-header fs-3">India</h5>
 
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
-                    <span class="badge bg-primary rounded-pill">{officeList.length}</span>
+            <ul className="list-group list-group-flush">
+                <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
+                    <span className="badge bg-primary rounded-pill">{officeList.length}</span>
                 </li>
                 {officeListItems}
 
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
-                    <span class="badge bg-primary rounded-pill">{meetingList.length}</span>
+                <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
+                    <span className="badge bg-primary rounded-pill">{meetingList.length}</span>
                 </li>
                 {meetingListItems}
 
-                <li class="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Anywhere
-                    <span class="badge bg-primary rounded-pill">{anywhereList.length}</span>
+                <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Anywhere
+                    <span className="badge bg-primary rounded-pill">{anywhereList.length}</span>
                 </li>
                 {anywhereListItems}
 
