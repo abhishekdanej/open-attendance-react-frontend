@@ -3,6 +3,7 @@ import MailInput from "./MailInput";
 import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
+import MessageToast from "./MessageToast";
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
   // const [mail, setMail] = useState(null);
 
   const [todaysAttendance, setTodaysAttendance] = useState([]);
+  const [showFlag, setShowFlag] = useState(null);
 
   useEffect(() => {
 
@@ -69,6 +71,7 @@ function App() {
         console.log("POST SUCCESS", JSON.parse(result).body);
         setPressedButton(payload);
         updateLocalAttendance(payload);
+        setShowFlag(true);
         // alert(JSON.parse(result).body)
       }
       )
@@ -162,10 +165,14 @@ function App() {
 
   function handleButtonSubmit(payload) {
 
-    console.log("pressed: " + payload);
-    storeAttendance(payload);
+    console.log("Button pressed:", payload);
+    // send attendance if pressed button is different that current selection
+    if (payload !== pressedButton) {
+      storeAttendance(payload);
+    }
 
   }
+
 
   return (
 
@@ -174,12 +181,13 @@ function App() {
       <Navbar mail={mail}></Navbar>
 
       <div className="container">
-
         <nav className="navbar justify-content-center">
           <div class="badge bg-secondary text-wrap">
             {getUserFormattedDate()}
           </div>
         </nav>
+        
+        <br></br>
 
         {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
@@ -196,6 +204,8 @@ function App() {
             <Button name="Meeting" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
           </nav>
         }
+
+        <MessageToast showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast>
 
       </div>
 
