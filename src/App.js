@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 
 function App() {
 
+  const [userLocation, setUserLocation] = useState();
 
   const [pressedButton, setPressedButton] = useState();
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
@@ -14,11 +15,29 @@ function App() {
   const [todaysAttendance, setTodaysAttendance] = useState([]);
 
   useEffect(() => {
+
+    console.log("IDENTIFYING user location.");
+
+    fetch('http://ip-api.com/json')
+      .then(response => response.json())
+      .then((result) => {
+        console.log("LOCATION API:", 'city:', result.city, result);
+        // console.log("LOCATION API CITY:", result.city);
+        const city = result.city;
+        setUserLocation(city);
+      })
+      .catch(error => console.log("FAILED to get user's location:", error));
+
+  }, [userLocation]);
+
+
+  useEffect(() => {
     if (mail) {
-      console.log("In useEffect");
+      console.log("In useEffect - mail");
+      // console.log("User city:", userLocation);
       getAttendanceData();
     }
-  }, [mail, pressedButton]);
+  }, [mail]);
 
 
   function storeAttendance(payload) {
@@ -42,20 +61,30 @@ function App() {
     };
     // make API call with parameters and use promises to get response
 
-    console.log("POST to save attendance: ", raw);
+    console.log("POST attempt to save attendance: ", raw);
 
     fetch("https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/", requestOptions)
       .then(response => response.text())
       .then((result) => {
-        console.log(JSON.parse(result).body);
+        console.log("POST SUCCESS", JSON.parse(result).body);
         setPressedButton(payload);
+        updateLocalAttendance(payload);
         // alert(JSON.parse(result).body)
       }
       )
       .catch(error => console.log('FAILED to POST attendance, error:', error));
 
+  }
 
-
+  function updateLocalAttendance(payload) {
+    console.log("Updating internal attendance, after button-press event", payload);
+    for (const item of todaysAttendance) {
+      console.log(item);
+      if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
+        console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
+        item.WorkLocation = payload;
+      }
+    }
   }
 
 
@@ -66,6 +95,16 @@ function App() {
     const day = today.toString().substring(0, 3)
     let formatted_date = day + "-" + today.getDate() + "-" + months[today.getMonth()] + "-" + today.getFullYear();
     formatted_date = formatted_date.toUpperCase();
+
+    return formatted_date;
+  }
+
+  function getUserFormattedDate() {
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let today = new Date()
+    const day = today.toString().substring(0, 3)
+    let formatted_date = day + ", " + today.getDate() + " " + months[today.getMonth()] + " " + today.getFullYear();
 
     return formatted_date;
   }
@@ -82,21 +121,32 @@ function App() {
     fetch(url)
       .then(response => response.json())
       .then((result) => {
-        console.log(result.body);
-        setTodaysAttendance(result.body);
+        console.log("Received from server:", result.body);
+        console.log(JSON.stringify(result.body));
+
+        if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
+          console.log("Received attendance is different than local attendance, updating local attendance.");
+          setTodaysAttendance(result.body);
+        } else {
+          console.log("Received attendance is same as local attendance");
+        }
+
         for (const item of result.body) {
           console.log(item.SK, 'comparing with', mail, fDate);
           // setTodaysAttendance(result.body);
 
           if (item.SK === mail && item.PK === fDate) {
-            console.log("Attendance is already marked for " + mail);
-            setPressedButton(item.WorkLocation);
-            break;
+            // console.log("Attendance is already marked for", mail, "as", pressedButton);
+            if (pressedButton !== item.WorkLocation) {
+              setPressedButton(pressedButton => item.WorkLocation);
+              console.log("Attendance updated for", mail, "from", pressedButton, "to", item.WorkLocation);
+              break;
+            }
           }
         }
 
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('FAILED to GET attendance, error', error));
 
   }
 
@@ -124,6 +174,12 @@ function App() {
       <Navbar mail={mail}></Navbar>
 
       <div className="container">
+
+        <nav className="navbar justify-content-center">
+          <div class="badge bg-secondary text-wrap">
+            {getUserFormattedDate()}
+          </div>
+        </nav>
 
         {!mail &&
           <MailInput onMailSubmit={handleMailClick} />

@@ -8,7 +8,7 @@ export default function AttendanceCard(value) {
     if (value) {
 
         console.log("Got Object: " + value['value'].length);
-
+        // setAtList(value['value']);
         // console.log("Got list: " + JSON.stringify(value));
         // const obj = JSON.parse(JSON.stringify(value))['value'];
         // console.log("List length: " + obj.length);
@@ -30,24 +30,20 @@ export default function AttendanceCard(value) {
 
         //  <li class="list-group-item fs-5">Person A</li>
         
-        console.log("Office list size: " + officeList.length);
+        console.log("Office size",officeList.length,", Anywhere size:", anywhereList.length, ", Meeting size:", meetingList.length);
     }
-
 
     const officeListItems = officeList.map(record =>
         <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-    )
-
+    );
     const anywhereListItems = anywhereList.map(record =>
         <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-    )
-
+    );
     const meetingListItems = meetingList.map(record =>
         <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-    )
+    );
 
     return (
-
 
         < div class="card text-bg-primary mb-3"  >
             <h5 class="card-header fs-3">India</h5>
@@ -67,7 +63,6 @@ export default function AttendanceCard(value) {
                     <span class="badge bg-primary rounded-pill">{anywhereList.length}</span>
                 </li>
                 {anywhereListItems}
-
 
             </ul>
 
