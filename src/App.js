@@ -119,6 +119,7 @@ function App() {
     const fDate = getFormattedDate();
 
     var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
+    url = url + "&mail=" + mail;
 
     // working
     fetch(url)
@@ -186,7 +187,7 @@ function App() {
             {getUserFormattedDate()}
           </div>
         </nav>
-        
+
         <br></br>
 
         {!mail &&
