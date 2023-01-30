@@ -213,8 +213,11 @@ function App() {
           <AttendanceCard value={todaysAttendance}></AttendanceCard>
         }
 
+        <br></br>
+        <br></br>
+        <br></br>
         {mail &&
-          <nav className="navbar sticky-bottom justify-content-center navbar-light bg-dark">
+          <nav className="navbar fixed-bottom justify-content-center navbar-light bg-dark">
             <Button name="Office" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
             <Button name="Anywhere" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
             <Button name="Meeting" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
