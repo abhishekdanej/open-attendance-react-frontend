@@ -8,7 +8,7 @@ function MessageToast({ showFlag, onToastClose }) {
             <Toast show={showFlag} onClose={onToastClose} delay={3000} autohide>
                 <Toast.Header>
                     <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                    <strong className="me-auto">Open Attendance</strong>
+                    <strong className="me-auto">openverse</strong>
                     <small>now</small>
                 </Toast.Header>
                 <Toast.Body><span>Attendance Updated</span></Toast.Body>

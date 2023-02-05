@@ -3,7 +3,8 @@
 export default function Button({ name, onButtonSubmit, pressedButton }) {
 
     return (
-      <button type="button" onClick={() => onButtonSubmit(name)} className="btn btn-lg btn-outline-warning m-1">
+      <button type="button" onClick={() => onButtonSubmit(name)}>
+        Office
         {name} {pressedButton === name ? '✔' : ''}
       </button>
     );

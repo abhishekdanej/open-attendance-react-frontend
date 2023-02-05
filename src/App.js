@@ -38,11 +38,12 @@ function App() {
   useEffect(() => {
     if (mail) {
       console.log("In useEffect - mail");
-      getAttendanceData();
+      // getAttendanceData();
     }
   }, [mail]);
 
 
+  /*
   function storeAttendance(payload) {
 
     // setPressedButton(payload);
@@ -79,6 +80,7 @@ function App() {
       .catch(error => console.log('FAILED to POST attendance, error:', error));
 
   }
+*/
 
   function updateLocalAttendance(payload) {
     console.log("Updating internal attendance, after button-press event", payload);
@@ -117,6 +119,7 @@ function App() {
     return formatted_date;
   }
 
+  /*
   function getUserFormattedDate() {
 
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -125,8 +128,11 @@ function App() {
     let formatted_date = day + ", " + today.getDate() + " " + months[today.getMonth()] + " " + today.getFullYear();
 
     return formatted_date;
-  }
+  }*/
 
+
+
+  /*
   function getAttendanceData() {
 
     console.log("Getting attendance data from server");
@@ -168,6 +174,7 @@ function App() {
       .catch(error => console.log('FAILED to GET attendance, error', error));
 
   }
+  */
 
   function handleMailClick(payload) {
 
@@ -179,6 +186,7 @@ function App() {
 
   }
 
+  /*
   function handleButtonSubmit(payload) {
 
     console.log("Button pressed:", payload);
@@ -188,6 +196,7 @@ function App() {
     }
 
   }
+  */
 
 
   return (
@@ -197,34 +206,35 @@ function App() {
       <Navbar mail={mail}></Navbar>
 
       <div className="container">
-        <nav className="navbar justify-content-center">
+        {/* <nav className="navbar justify-content-center">
           <div className="badge bg-secondary text-wrap">
             {getUserFormattedDate()}
           </div>
         </nav>
 
-        <br></br>
+        <br></br> */}
 
         {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
         }
 
         {mail &&
-          <AttendanceCard value={todaysAttendance}></AttendanceCard>
+          // <AttendanceCard mail={mail} value={todaysAttendance}></AttendanceCard>
+          <AttendanceCard mail={mail} ></AttendanceCard>
         }
 
         <br></br>
         <br></br>
         <br></br>
-        {mail &&
+        {/* {mail &&
           <nav className="navbar fixed-bottom justify-content-center navbar-light bg-dark">
             <Button name="Office" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
             <Button name="Anywhere" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
             <Button name="Meeting" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
           </nav>
-        }
+        } */}
 
-        <MessageToast showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast>
+        {/* <MessageToast showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast> */}
 
       </div>
 
