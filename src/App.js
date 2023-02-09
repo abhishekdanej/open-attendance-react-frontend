@@ -35,12 +35,12 @@ function App() {
   */
 
 
-  useEffect(() => {
-    if (mail) {
-      console.log("In useEffect - mail");
-      // getAttendanceData();
-    }
-  }, [mail]);
+  // useEffect(() => {
+  //   if (mail) {
+  //     console.log("In useEffect - mail");
+  //     // getAttendanceData();
+  //   }
+  // }, [mail]);
 
 
   /*
@@ -210,13 +210,6 @@ function App() {
       <Navbar mail={mail}></Navbar>
 
       <div className="container">
-        {/* <nav className="navbar justify-content-center">
-          <div className="badge bg-secondary text-wrap">
-            {getUserFormattedDate()}
-          </div>
-        </nav>
-
-        <br></br> */}
 
         {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
@@ -230,15 +223,6 @@ function App() {
         <br></br>
         <br></br>
         <br></br>
-        {/* {mail &&
-          <nav className="navbar fixed-bottom justify-content-center navbar-light bg-dark">
-            <Button name="Office" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-            <Button name="Anywhere" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-            <Button name="Meeting" onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-          </nav>
-        } */}
-
-        {/* <MessageToast showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast> */}
 
       </div>
 
