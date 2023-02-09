@@ -9,12 +9,12 @@ function App() {
 
   // const [userLocation, setUserLocation] = useState();
 
-  const [pressedButton, setPressedButton] = useState();
+  // const [pressedButton, setPressedButton] = useState();
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   // const [mail, setMail] = useState(null);
 
-  const [todaysAttendance, setTodaysAttendance] = useState([]);
-  const [showFlag, setShowFlag] = useState(null);
+  // const [todaysAttendance, setTodaysAttendance] = useState([]);
+  // const [showFlag, setShowFlag] = useState(null);
 
   /*
   useEffect(() => {
@@ -82,6 +82,7 @@ function App() {
   }
 */
 
+/*
   function updateLocalAttendance(payload) {
     console.log("Updating internal attendance, after button-press event", payload);
     var matchFlag = false;
@@ -106,8 +107,10 @@ function App() {
       todaysAttendance.push(obj);
     }
   }
+  */
 
 
+  /*
   function getFormattedDate() {
 
     const months = ["Jan", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -118,6 +121,7 @@ function App() {
 
     return formatted_date;
   }
+  */
 
   /*
   function getUserFormattedDate() {
@@ -220,7 +224,7 @@ function App() {
 
         {mail &&
           // <AttendanceCard mail={mail} value={todaysAttendance}></AttendanceCard>
-          <AttendanceCard mail={mail} ></AttendanceCard>
+          <AttendanceCard ></AttendanceCard>
         }
 
         <br></br>

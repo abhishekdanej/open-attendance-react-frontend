@@ -6,21 +6,29 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
 
-export default function AttendanceCard({ mail }) {
+export default function AttendanceCard() {
 
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setTempNotes(tempNotes => notes)
+        setNotesError(notesError => null)
+    }
     const handleShow = () => setShow(true);
     const [pressedButton, setPressedButton] = useState();
     const [showFlag, setShowFlag] = useState(null);
-    // const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
 
     const [todaysAttendance, setTodaysAttendance] = useState([]);
 
     const [remoteList, setRemoteList] = useState([]);
     const [officeList, setOfficeList] = useState([]);
     const [meetingList, setMeetingList] = useState([]);
+    const [notes, setNotes] = useState(null);
+    const [tempNotes, setTempNotes] = useState(null);
+    const [notesError, setNotesError] = useState(null);
+    // const [isBtnDisabled, setBtnDisabled] = useState(false);
 
 
     // useEffect(() => {
@@ -32,7 +40,7 @@ export default function AttendanceCard({ mail }) {
 
     useEffect(() => {
         updateAtLists();
-    },[todaysAttendance]);
+    }, [todaysAttendance]);
 
     /*
     useEffect(() => {
@@ -123,7 +131,7 @@ export default function AttendanceCard({ mail }) {
             })
             .catch(error => console.log('FAILED to GET attendance, error', error));
 
-    }, [todaysAttendance, mail])
+    }, [mail])
 
 
     function updateAtLists() {
@@ -310,12 +318,14 @@ export default function AttendanceCard({ mail }) {
 
     function handleButtonSubmit(payload) {
 
-        console.log("Button pressed:", payload);
+        console.log("Button pressed:", payload, "notes:", tempNotes);
         // send attendance if pressed button is different that current selection
-        if (payload !== pressedButton) {
+        if (notesError === null && (payload !== pressedButton || tempNotes!==notes)) {
+            setNotes(notes => tempNotes)
+            // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
-        }
-        setShow(false);
+            setShow(false);
+        } 
 
     }
 
@@ -324,7 +334,7 @@ export default function AttendanceCard({ mail }) {
         console.log("Updating internal attendance, after button-press event", payload);
         var matchFlag = false;
         for (const item of todaysAttendance) {
-            console.log("Current todayAttendance",item);
+            console.log("Current todayAttendance", item);
             if (item.SK === mail) {
                 matchFlag = true;
             }
@@ -348,50 +358,19 @@ export default function AttendanceCard({ mail }) {
     }
 
 
-/*
-    function getAttendanceData() {
+    function handleNotes(value) {
 
-        console.log("GET attendance attempt from server");
+        setNotesError(notesError => null)
+        setTempNotes(tempNotes => value)
 
-        const fDate = getFormattedDate();
-
-        var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
-        url = url + "&mail=" + mail;
-
-        // working
-        fetch(url)
-            .then(response => response.json())
-            .then((result) => {
-                console.log("Received from server:", result.body);
-                console.log(JSON.stringify(result.body));
-
-                if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
-                    console.log("Received attendance is different than local attendance, updating local attendance.");
-                    setTodaysAttendance(result.body);
-                } else {
-                    console.log("Received attendance is same as local attendance");
-                }
-
-                for (const item of result.body) {
-                    console.log(item.SK, 'comparing with', mail, fDate);
-                    // setTodaysAttendance(result.body);
-
-                    if (item.SK === mail && item.PK === fDate) {
-                        // console.log("Attendance is already marked for", mail, "as", pressedButton);
-                        if (pressedButton !== item.WorkLocation) {
-                            setPressedButton(pressedButton => item.WorkLocation);
-                            console.log("Attendance updated for", mail, "from", pressedButton, "to", item.WorkLocation);
-                            break;
-                        }
-                    }
-                }
-
-            })
-            .catch(error => console.log('FAILED to GET attendance, error', error));
+        if (value.length >= 30) {
+            setNotesError(notesError => "Allowed length upto 30 char. Extra chars will be trimmed.")
+        }
+        if (value.search(/[*<{}>!@#$%^=]/i) >= 0) {
+            setNotesError(notesError => "<{}>*!@#$%^* special chars not allowed.")
+        }
 
     }
-    */
-
 
     return (
 
@@ -405,8 +384,8 @@ export default function AttendanceCard({ mail }) {
             <br></br>
 
             < div className="card mb-3"  >
-                <h5 className="card-header text-bg-primary fs-3">India</h5>
-
+                <h5 className="card-header text-bg-primary fs-3">India
+                </h5>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
                         <span className="badge bg-primary rounded-pill">{officeList.length}</span>
@@ -456,9 +435,14 @@ export default function AttendanceCard({ mail }) {
                     <MyButton name="Remote" className='btn btn-warning btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <br></br>
                     {/* <label for="inputPassword5" class="form-label">Password</label> */}
-                    <input disabled type="text" id="inputPassword5" className="form-control" aria-describedby="passwordHelpBlock" placeholder="STAY TUNED" aria-label="STAY TUNED"></input>
-                    <div id="passwordHelpBlock" className="form-text">
+                    {/* <input type="text" onChange={(e) => setNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
+                    <input type="text" onChange={(e) => handleNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
+                    {/* <input type="text" onChange={(e) => setTempNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
+                    <div id="notesHelpBlock" className="form-text">
                         Additional notes eg. customer name, location or purpose.
+                    </div>
+                    <div id="notesErrorBlock" className="form-text text-danger">
+                        {notesError}
                     </div>
                 </Offcanvas.Body>
             </Offcanvas>
@@ -469,10 +453,10 @@ export default function AttendanceCard({ mail }) {
     );
 }
 
-function MyButton({ name, onButtonSubmit, pressedButton, className }) {
+function MyButton({ name, onButtonSubmit, pressedButton, className, disabled }) {
 
     return (
-        <button type="button" onClick={() => onButtonSubmit(name)} className={className}>
+        <button type="button" disabled={disabled} onClick={() => onButtonSubmit(name)} className={className}>
             {name} {pressedButton === name ? '✔' : ''}
         </button>
     );
