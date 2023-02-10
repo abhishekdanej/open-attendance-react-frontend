@@ -28,65 +28,11 @@ export default function AttendanceCard() {
     const [notes, setNotes] = useState(null);
     const [tempNotes, setTempNotes] = useState(null);
     const [notesError, setNotesError] = useState(null);
-    // const [isBtnDisabled, setBtnDisabled] = useState(false);
 
-
-    // useEffect(() => {
-    //     if (mail) {
-    //         console.log("In useEffect - mail", mail);
-    //         // getAttendanceData();
-    //     }
-    // }, [mail]);
 
     useEffect(() => {
         updateAtLists();
     }, [todaysAttendance]);
-
-    /*
-    useEffect(() => {
-
-        console.log("In useEffect todaysAttendance")
-
-        var tofficeList = [];
-        var tmeetingList = [];
-        var tremoteList = [];
-        // var officeListItems = [];
-        // var meetingListItems = [];
-        // var anywhereListItems = []
-
-        for (const item of todaysAttendance) {
-            console.log("checking: " + JSON.stringify(item));
-            if (item.WorkLocation === 'Office') {
-                tofficeList.push(item);
-            }
-            if (item.WorkLocation === 'Remote') {
-                tremoteList.push(item);
-            }
-            if (item.WorkLocation === 'Meeting') {
-                tmeetingList.push(item);
-            }
-        }
-
-        //  <li class="list-group-item fs-5">Person A</li>
-
-        console.log("Office size", tofficeList.length, ", Anywhere size:", tremoteList.length, ", Meeting size:", tmeetingList.length);
-        // }
-
-        setOfficeList(officeList => tofficeList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-        //  anywhereListItems = anywhereList.map(record =>
-        //     <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        // );
-        setRemoteList(remoteList => tremoteList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-        setMeetingList(meetingList => tmeetingList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-
-    }, [todaysAttendance])
-*/
 
 
     useEffect(() => {
@@ -114,6 +60,7 @@ export default function AttendanceCard() {
                     console.log("Received attendance is same as local attendance");
                 }
 
+                // move this code to useEffect of todaysAttendance
                 for (const item of result.body) {
                     console.log(item.SK, 'comparing with', mail, fDate);
                     // setTodaysAttendance(result.body);
@@ -123,8 +70,16 @@ export default function AttendanceCard() {
                         if (pressedButton !== item.WorkLocation) {
                             setPressedButton(pressedButton => item.WorkLocation);
                             console.log("Attendance updated for", mail, "from [", pressedButton, "] to [", item.WorkLocation, "]");
-                            break;
+                            // break;
                         }
+                        
+                        if(notes !== item.NOTES) {
+                            console.log("Notes updated for", mail, "from [", notes, "] to [", item.NOTES, "]");
+                            setNotes(notes => item.NOTES)
+                        }
+
+                        break;
+
                     }
                 }
 
@@ -156,6 +111,7 @@ export default function AttendanceCard() {
             if (item.WorkLocation === 'Meeting') {
                 tmeetingList.push(item);
             }
+
         }
 
         //  <li class="list-group-item fs-5">Person A</li>
@@ -166,9 +122,6 @@ export default function AttendanceCard() {
         setOfficeList(officeList => tofficeList.map(record =>
             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
         ));
-        //  anywhereListItems = anywhereList.map(record =>
-        //     <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        // );
         setRemoteList(remoteList => tremoteList.map(record =>
             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
         ));
@@ -177,105 +130,6 @@ export default function AttendanceCard() {
         ));
 
     }
-
-
-    /*
-    var officeList = [];
-    var meetingList = [];
-    var anywhereList = [];
-
-    if (value && value['value'].length) {
-
-        console.log("Got Object: " + value['value'].length);
-        
-        // DO NOT USE
-        // setAtList(value['value']);
-        // console.log("Got list: " + JSON.stringify(value));
-        // const obj = JSON.parse(JSON.stringify(value))['value'];
-        // console.log("List length: " + obj.length);
-
-
-        var list = value['value'];
-        for (const item of list) {
-            console.log("checking: " + JSON.stringify(item));
-            if (item.WorkLocation === 'Office') {
-                officeList.push(item);
-            }
-            if (item.WorkLocation === 'Anywhere') {
-                anywhereList.push(item);
-            }
-            if (item.WorkLocation === 'Meeting') {
-                meetingList.push(item);
-            }
-        }
-
-        //  <li class="list-group-item fs-5">Person A</li>
-
-        console.log("Office size", officeList.length, ", Anywhere size:", anywhereList.length, ", Meeting size:", meetingList.length);
-    }
-
-    const officeListItems = officeList.map(record =>
-        <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-    );
-    const anywhereListItems = anywhereList.map(record =>
-        <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-    );
-    const meetingListItems = meetingList.map(record =>
-        <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-    );
-    */
-
-    // NEW 
-
-    /*
-    if (false) {
-        // if (todaysAttendance) {
-
-
-        
-        var officeList = [];
-        var meetingList = [];
-        var anywhereList = [];
-        var officeListItems = [];
-        var meetingListItems = [];
-        var anywhereListItems = []
-        
-
-        // if (value && value['value'].length) {
-
-        // console.log("Got Object: " + value['value'].length);
-
-
-        // var list = value['value'];
-        for (const item of todaysAttendance) {
-            console.log("checking: " + JSON.stringify(item));
-            if (item.WorkLocation === 'Office') {
-                officeList.push(item);
-            }
-            if (item.WorkLocation === 'Remote') {
-                anywhereList.push(item);
-            }
-            if (item.WorkLocation === 'Meeting') {
-                meetingList.push(item);
-            }
-        }
-
-        //  <li class="list-group-item fs-5">Person A</li>
-
-        console.log("Office size", officeList.length, ", Anywhere size:", anywhereList.length, ", Meeting size:", meetingList.length);
-        // }
-
-        officeListItems = officeList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        );
-        anywhereListItems = anywhereList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        );
-        meetingListItems = meetingList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        );
-    }
-    */
 
 
     function storeAttendance(payload) {
@@ -288,7 +142,8 @@ export default function AttendanceCard() {
         var raw = JSON.stringify({
             "mail": mail,
             "workLocation": payload,
-            "date": getFormattedDate()
+            "date": getFormattedDate(),
+            "notes" : notes
         });
         // create a JSON object with parameters for API call and store in a variable
         var requestOptions = {
@@ -349,7 +204,8 @@ export default function AttendanceCard() {
             var obj = {
                 "SK": mail,
                 "WorkLocation": payload,
-                "PK": getFormattedDate()
+                "PK": getFormattedDate(),
+                "NOTES": notes
             }
             todaysAttendance.push(obj);
         }
