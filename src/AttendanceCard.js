@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 // import AtButton from "./Button";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
+import { redirect, useNavigate } from 'react-router-dom';
 
 export default function AttendanceCard() {
 
@@ -15,6 +16,9 @@ export default function AttendanceCard() {
         setTempNotes(tempNotes => notes)
         setNotesError(notesError => null)
     }
+
+    const navigate = useNavigate();
+
     const handleShow = () => setShow(true);
     const [pressedButton, setPressedButton] = useState();
     const [showFlag, setShowFlag] = useState(null);
@@ -88,10 +92,16 @@ export default function AttendanceCard() {
 
     }, [todaysAttendance]);
 
+    
 
     useEffect(() => {
 
         console.log("In useEffect - mail");
+        if(!mail) {
+            console.log("Login not found, redirecting to Login page")
+            navigate("/login");
+          }
+        
         console.log("GET attendance attempt from server");
 
         const fDate = getFormattedDate();

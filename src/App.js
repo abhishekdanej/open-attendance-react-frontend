@@ -4,13 +4,24 @@ import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav.js";
-import { Route, Routes } from "react-router-dom";
+import { Redirect, useNavigate, redirect, Route, Routes } from "react-router-dom";
 import MyAtPane from "./MyAtPane";
 // import MessageToast from "./MessageToast";
 
 function App() {
 
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("In useEffect mail")
+    if (!mail) {
+      console.log("Login not found, redirecting to Login page")
+      navigate("/login");
+    } else {
+      navigate("/team")
+    }
+  }, [mail])
 
   // const [pressedButton, setPressedButton] = useState();
   // const [mail, setMail] = useState(null);
@@ -84,32 +95,32 @@ function App() {
   }
 */
 
-/*
-  function updateLocalAttendance(payload) {
-    console.log("Updating internal attendance, after button-press event", payload);
-    var matchFlag = false;
-    for (const item of todaysAttendance) {
-      console.log(item);
-      if (item.SK === mail) {
-        matchFlag = true;
+  /*
+    function updateLocalAttendance(payload) {
+      console.log("Updating internal attendance, after button-press event", payload);
+      var matchFlag = false;
+      for (const item of todaysAttendance) {
+        console.log(item);
+        if (item.SK === mail) {
+          matchFlag = true;
+        }
+        if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
+          console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
+          item.WorkLocation = payload;
+          matchFlag = true;
+        }
       }
-      if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
-        console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
-        item.WorkLocation = payload;
-        matchFlag = true;
+      if (!matchFlag) {
+        // insert new entry
+        var obj = {
+          "SK": mail,
+          "WorkLocation": payload,
+          "PK": getFormattedDate()
+        }
+        todaysAttendance.push(obj);
       }
     }
-    if (!matchFlag) {
-      // insert new entry
-      var obj = {
-        "SK": mail,
-        "WorkLocation": payload,
-        "PK": getFormattedDate()
-      }
-      todaysAttendance.push(obj);
-    }
-  }
-  */
+    */
 
 
   /*
@@ -184,9 +195,11 @@ function App() {
 
   function handleMailClick(payload) {
 
-    setMail(payload);
+    // setMail(payload);
     localStorage.setItem('mail', JSON.stringify(payload));
     console.log('User input mail: ' + payload);
+    setMail(mail => payload)
+    navigate("/team")
     //getAttendanceData();
     // localStorage.setItem('mail', payload);
 
@@ -213,18 +226,14 @@ function App() {
 
       <div className="container">
 
-        {!mail &&
+        {/* {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
-        }
-
-        {/* {mail &&
-          // <AttendanceCard mail={mail} value={todaysAttendance}></AttendanceCard>
-          <AttendanceCard ></AttendanceCard>
         } */}
 
         <Routes>
-          <Route path="/team" element={<AttendanceCard/>}/>
-          <Route path="/me" element={<MyAtPane/>}/>
+          <Route path="/team" element={<AttendanceCard />} />
+          <Route path="/me" element={<MyAtPane />} />
+          <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
         </Routes>
 
         <br></br>
