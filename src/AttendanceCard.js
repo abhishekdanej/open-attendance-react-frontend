@@ -22,16 +22,16 @@ export default function AttendanceCard() {
 
     const [todaysAttendance, setTodaysAttendance] = useState([]);
 
-    // const [remoteList, setRemoteList] = useState([]);
-    // const [officeList, setOfficeList] = useState([]);
-    // const [meetingList, setMeetingList] = useState([]);
+    const [remoteList, setRemoteList] = useState([]);
+    const [officeList, setOfficeList] = useState([]);
+    const [meetingList, setMeetingList] = useState([]);
     const [notes, setNotes] = useState(null);
     const [tempNotes, setTempNotes] = useState(null);
     const [notesError, setNotesError] = useState(null);
 
-    const [remoteCount, setRemoteCount] = useState(0);
-    const [officeCount, setOfficeCount] = useState(0);
-    const [meetingCount, setMeetingCount] = useState(0);
+    // const [remoteCount, setRemoteCount] = useState(0);
+    // const [officeCount, setOfficeCount] = useState(0);
+    // const [meetingCount, setMeetingCount] = useState(0);
 
     useEffect(() => {
         // updateAtLists();
@@ -39,9 +39,12 @@ export default function AttendanceCard() {
         console.log("In useEffect todaysAttendance")
 
         const fDate = getFormattedDate();
-        var mCount = 0;
-        var oCount = 0;
-        var rCount = 0;
+        // var mCount = 0;
+        // var oCount = 0;
+        // var rCount = 0;
+        var mList = [];
+        var rList = [];
+        var oList = [];
 
         for (const item of todaysAttendance) {
             console.log("COMPARING received [", item.SK, '] with local -', mail, fDate);
@@ -65,16 +68,23 @@ export default function AttendanceCard() {
 
             }
 
-            var t = item.WorkLocation === 'Remote' ? (rCount++) : null
-            t = item.WorkLocation === 'Meeting' ? (mCount++) : null
-            t = item.WorkLocation === 'Office' ? (oCount++) : null
+
+            // var t = item.WorkLocation === 'Remote' ? (rCount++) : null
+            // t = item.WorkLocation === 'Meeting' ? (mCount++) : null
+            if (item.WorkLocation === 'Remote') rList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
+            if (item.WorkLocation === 'Meeting') mList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
+            if (item.WorkLocation === 'Office') oList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
         }
 
-        setMeetingCount(meetingCount => mCount)
-        setRemoteCount(remoteCount => rCount)
-        setOfficeCount(officeCount => oCount)
+        // setMeetingCount(meetingCount => mCount)
+        // setRemoteCount(remoteCount => rCount)
+        // setOfficeCount(officeCount => oCount)
+        setMeetingList(meetingList => mList)
+        setRemoteList(remoteList => rList)
+        setOfficeList(officeList => oList)
 
-        console.log("Office count:", oCount, ", Remote count:", rCount, ", Meeting count:", mCount);
+        // console.log("Office count:", oCount, ", Remote count:", rCount, ", Meeting count:", mCount);
+        console.log("Office size:", officeList.length, ", Remote size:", remoteList.length, ", Meeting size:", meetingList.length);
 
     }, [todaysAttendance]);
 
@@ -135,50 +145,50 @@ export default function AttendanceCard() {
     }, [mail])
 
 
-   /* 
-    function updateAtLists() {
+    /* 
+     function updateAtLists() {
+ 
+         console.log("In updateAtLists", todaysAttendance.length)
+ 
+         var tofficeList = [];
+         var tmeetingList = [];
+         var tremoteList = [];
+         // var officeListItems = [];
+         // var meetingListItems = [];
+         // var anywhereListItems = []
+ 
+         for (const item of todaysAttendance) {
+             console.log("checking: " + JSON.stringify(item));
+             if (item.WorkLocation === 'Office') {
+                 tofficeList.push(item);
+             }
+             if (item.WorkLocation === 'Remote') {
+                 tremoteList.push(item);
+             }
+             if (item.WorkLocation === 'Meeting') {
+                 tmeetingList.push(item);
+             }
+ 
+         }
+ 
+         //  <li class="list-group-item fs-5">Person A</li>
+ 
+         console.log("Office size", tofficeList.length, ", Anywhere size:", tremoteList.length, ", Meeting size:", tmeetingList.length);
+         // }
+ 
+         setOfficeList(officeList => tofficeList.map(record =>
+             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
+         ));
+         setRemoteList(remoteList => tremoteList.map(record =>
+             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
+         ));
+         setMeetingList(meetingList => tmeetingList.map(record =>
+             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
+         ));
+ 
+     }
+     */
 
-        console.log("In updateAtLists", todaysAttendance.length)
-
-        var tofficeList = [];
-        var tmeetingList = [];
-        var tremoteList = [];
-        // var officeListItems = [];
-        // var meetingListItems = [];
-        // var anywhereListItems = []
-
-        for (const item of todaysAttendance) {
-            console.log("checking: " + JSON.stringify(item));
-            if (item.WorkLocation === 'Office') {
-                tofficeList.push(item);
-            }
-            if (item.WorkLocation === 'Remote') {
-                tremoteList.push(item);
-            }
-            if (item.WorkLocation === 'Meeting') {
-                tmeetingList.push(item);
-            }
-
-        }
-
-        //  <li class="list-group-item fs-5">Person A</li>
-
-        console.log("Office size", tofficeList.length, ", Anywhere size:", tremoteList.length, ", Meeting size:", tmeetingList.length);
-        // }
-
-        setOfficeList(officeList => tofficeList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-        setRemoteList(remoteList => tremoteList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-        setMeetingList(meetingList => tmeetingList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-
-    }
-    */
-    
 
 
     function storeAttendance(payload) {
@@ -305,44 +315,43 @@ export default function AttendanceCard() {
                 </h5>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
-                        <span className="badge bg-primary rounded-pill">{officeCount}</span>
+                        <span className="badge bg-primary rounded-pill">{officeList.length}</span>
                     </li>
-                    {/* {officeList} */}
-
-                    {
+                    {officeList}
+                    {/* {
                         todaysAttendance.map(record =>
                             record.WorkLocation === 'Office' ?
                                 <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
                                 null
                         )
-                    }
+                    } */}
 
 
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
-                        <span className="badge bg-primary rounded-pill">{meetingCount}</span>
+                        <span className="badge bg-primary rounded-pill">{meetingList.length}</span>
                     </li>
-                    {/* {meetingList} */}
+                    {meetingList}
+                    {/* {
 
-                    {
                         todaysAttendance.map(record =>
                             record.WorkLocation === 'Meeting' ?
                                 <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
                                 null
                         )
-                    }
+                    } */}
 
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Remote
-                        <span className="badge bg-primary rounded-pill">{remoteCount}</span>
+                        <span className="badge bg-primary rounded-pill">{remoteList.length}</span>
                     </li>
-                    {/* {remoteList} */}
+                    {remoteList}
 
-                    {
+                    {/* {
                         todaysAttendance.map(record =>
                             record.WorkLocation === 'Remote' ?
                                 <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
                                 null
                         )
-                    }
+                    } */}
 
                 </ul>
 
@@ -364,10 +373,7 @@ export default function AttendanceCard() {
                     <MyButton name="Meeting" className='btn btn-success btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Remote" className='btn btn-warning btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <br></br>
-                    {/* <label for="inputPassword5" class="form-label">Password</label> */}
-                    {/* <input type="text" onChange={(e) => setNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
                     <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
-                    {/* <input type="text" onChange={(e) => setTempNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
                     <div id="notesHelpBlock" className="form-text">
                         Additional notes eg. customer name, location or purpose.
                     </div>
