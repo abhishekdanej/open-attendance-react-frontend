@@ -22,16 +22,60 @@ export default function AttendanceCard() {
 
     const [todaysAttendance, setTodaysAttendance] = useState([]);
 
-    const [remoteList, setRemoteList] = useState([]);
-    const [officeList, setOfficeList] = useState([]);
-    const [meetingList, setMeetingList] = useState([]);
+    // const [remoteList, setRemoteList] = useState([]);
+    // const [officeList, setOfficeList] = useState([]);
+    // const [meetingList, setMeetingList] = useState([]);
     const [notes, setNotes] = useState(null);
     const [tempNotes, setTempNotes] = useState(null);
     const [notesError, setNotesError] = useState(null);
 
+    const [remoteCount, setRemoteCount] = useState(0);
+    const [officeCount, setOfficeCount] = useState(0);
+    const [meetingCount, setMeetingCount] = useState(0);
 
     useEffect(() => {
-        updateAtLists();
+        // updateAtLists();
+
+        console.log("In useEffect todaysAttendance")
+
+        const fDate = getFormattedDate();
+        var mCount = 0;
+        var oCount = 0;
+        var rCount = 0;
+
+        for (const item of todaysAttendance) {
+            console.log("COMPARING received [", item.SK, '] with local -', mail, fDate);
+            // setTodaysAttendance(result.body);
+
+            if (item.SK === mail && item.PK === fDate) {
+                // console.log("Attendance is already marked for", mail, "as", pressedButton);
+                if (pressedButton !== item.WorkLocation) {
+                    setPressedButton(pressedButton => item.WorkLocation);
+                    console.log("Local attendance updated for", mail, "from [", pressedButton, "] to [", item.WorkLocation, "]");
+                    // break;
+                }
+
+                if (notes !== item.NOTES) {
+                    console.log("Local notes updated for", mail, "from [", notes, "] to [", item.NOTES, "]");
+                    setNotes(notes => item.NOTES)
+                    setTempNotes(tempNotes => item.NOTES)
+                }
+
+                // break;
+
+            }
+
+            var t = item.WorkLocation === 'Remote' ? (rCount++) : null
+            t = item.WorkLocation === 'Meeting' ? (mCount++) : null
+            t = item.WorkLocation === 'Office' ? (oCount++) : null
+        }
+
+        setMeetingCount(meetingCount => mCount)
+        setRemoteCount(remoteCount => rCount)
+        setOfficeCount(officeCount => oCount)
+
+        console.log("Office count:", oCount, ", Remote count:", rCount, ", Meeting count:", mCount);
+
     }, [todaysAttendance]);
 
 
@@ -61,6 +105,7 @@ export default function AttendanceCard() {
                 }
 
                 // move this code to useEffect of todaysAttendance
+                /*
                 for (const item of result.body) {
                     console.log(item.SK, 'comparing with', mail, fDate);
                     // setTodaysAttendance(result.body);
@@ -82,6 +127,7 @@ export default function AttendanceCard() {
 
                     }
                 }
+                */
 
             })
             .catch(error => console.log('FAILED to GET attendance, error', error));
@@ -89,6 +135,7 @@ export default function AttendanceCard() {
     }, [mail])
 
 
+   /* 
     function updateAtLists() {
 
         console.log("In updateAtLists", todaysAttendance.length)
@@ -130,6 +177,8 @@ export default function AttendanceCard() {
         ));
 
     }
+    */
+    
 
 
     function storeAttendance(payload) {
@@ -143,7 +192,7 @@ export default function AttendanceCard() {
             "mail": mail,
             "workLocation": payload,
             "date": getFormattedDate(),
-            "notes" : tempNotes
+            "notes": tempNotes
         });
         // create a JSON object with parameters for API call and store in a variable
         var requestOptions = {
@@ -181,7 +230,7 @@ export default function AttendanceCard() {
             // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
             setShow(false);
-        } 
+        }
 
     }
 
@@ -189,19 +238,20 @@ export default function AttendanceCard() {
     function updateLocalAttendance(payload, newNotes) {
         console.log("Updating internal attendance, after button-press event", payload);
         var matchFlag = false;
-        for (const item of todaysAttendance) {
+        var newTodaysAt = [...todaysAttendance]
+        for (const item of newTodaysAt) {
             console.log("Current todayAttendance", item);
             if (item.SK === mail) {
                 matchFlag = true;
             }
             if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
-                console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
+                console.log("Updated internal attendance of", mail, "from [", item.WorkLocation, "] to [", payload, "]");
                 item.WorkLocation = payload;
                 matchFlag = true;
             }
 
             if (item.SK === mail && item.PK === getFormattedDate() && item.NOTES !== newNotes) {
-                console.log("Updated internal notes of", mail, "from", item.NOTES, "to", newNotes);
+                console.log("Updated internal notes of", mail, "from [", item.NOTES, "] to [", newNotes, "]");
                 item.NOTES = newNotes;
                 matchFlag = true;
             }
@@ -216,10 +266,11 @@ export default function AttendanceCard() {
                 "PK": getFormattedDate(),
                 "NOTES": newNotes
             }
-            todaysAttendance.push(obj);
+            newTodaysAt.push(obj);
         }
+        setTodaysAttendance(todaysAttendance => newTodaysAt)
 
-        updateAtLists();
+        // updateAtLists();
     }
 
 
@@ -237,6 +288,7 @@ export default function AttendanceCard() {
 
     }
 
+
     return (
 
         <>
@@ -253,31 +305,44 @@ export default function AttendanceCard() {
                 </h5>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
-                        <span className="badge bg-primary rounded-pill">{officeList.length}</span>
+                        <span className="badge bg-primary rounded-pill">{officeCount}</span>
                     </li>
-                    {officeList}
-                    {/* <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
-                        <span className="badge bg-primary rounded-pill">{officeListItems.length}</span>
-                    </li>
-                    {officeListItems} */}
+                    {/* {officeList} */}
+
+                    {
+                        todaysAttendance.map(record =>
+                            record.WorkLocation === 'Office' ?
+                                <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
+                                null
+                        )
+                    }
+
 
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
-                        <span className="badge bg-primary rounded-pill">{meetingList.length}</span>
+                        <span className="badge bg-primary rounded-pill">{meetingCount}</span>
                     </li>
-                    {meetingList}
-                    {/* <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
-                        <span className="badge bg-primary rounded-pill">{meetingListItems.length}</span>
-                    </li>
-                    {meetingListItems} */}
+                    {/* {meetingList} */}
 
-                    {/* <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Remote
-                        <span className="badge bg-primary rounded-pill">{anywhereListItems.length}</span>
-                    </li>
-                    {anywhereListItems} */}
+                    {
+                        todaysAttendance.map(record =>
+                            record.WorkLocation === 'Meeting' ?
+                                <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
+                                null
+                        )
+                    }
+
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Remote
-                        <span className="badge bg-primary rounded-pill">{remoteList.length}</span>
+                        <span className="badge bg-primary rounded-pill">{remoteCount}</span>
                     </li>
-                    {remoteList}
+                    {/* {remoteList} */}
+
+                    {
+                        todaysAttendance.map(record =>
+                            record.WorkLocation === 'Remote' ?
+                                <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
+                                null
+                        )
+                    }
 
                 </ul>
 
