@@ -1,16 +1,18 @@
-import Button from "./Button";
+// import Button from "./Button";
 import MailInput from "./MailInput";
 import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
-import MessageToast from "./MessageToast";
+import BottomNav from "./BottomNav.js";
+import { Route, Routes } from "react-router-dom";
+import MyAtPane from "./MyAtPane";
+// import MessageToast from "./MessageToast";
 
 function App() {
 
-  // const [userLocation, setUserLocation] = useState();
+  const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
 
   // const [pressedButton, setPressedButton] = useState();
-  const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   // const [mail, setMail] = useState(null);
 
   // const [todaysAttendance, setTodaysAttendance] = useState([]);
@@ -215,14 +217,21 @@ function App() {
           <MailInput onMailSubmit={handleMailClick} />
         }
 
-        {mail &&
+        {/* {mail &&
           // <AttendanceCard mail={mail} value={todaysAttendance}></AttendanceCard>
           <AttendanceCard ></AttendanceCard>
-        }
+        } */}
+
+        <Routes>
+          <Route path="/team" element={<AttendanceCard/>}/>
+          <Route path="/me" element={<MyAtPane/>}/>
+        </Routes>
 
         <br></br>
         <br></br>
         <br></br>
+
+        <BottomNav></BottomNav>
 
       </div>
 
