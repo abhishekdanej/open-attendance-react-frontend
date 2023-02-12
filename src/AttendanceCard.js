@@ -143,7 +143,7 @@ export default function AttendanceCard() {
             "mail": mail,
             "workLocation": payload,
             "date": getFormattedDate(),
-            "notes" : notes
+            "notes" : tempNotes
         });
         // create a JSON object with parameters for API call and store in a variable
         var requestOptions = {
@@ -161,7 +161,7 @@ export default function AttendanceCard() {
             .then((result) => {
                 console.log("POST SUCCESS", JSON.parse(result).body);
                 setPressedButton(payload);
-                updateLocalAttendance(payload);
+                updateLocalAttendance(payload, tempNotes);
                 setShowFlag(true);
                 // alert(JSON.parse(result).body)
             }
@@ -173,10 +173,12 @@ export default function AttendanceCard() {
 
     function handleButtonSubmit(payload) {
 
-        console.log("Button pressed:", payload, "notes:", tempNotes);
+        // console.log("Button pressed:", payload, "notes:", tempNotes);
+        console.log("Button pressed:", payload, ", temp-notes:", tempNotes, ", notes:", notes);
+        
         // send attendance if pressed button is different that current selection
         if (notesError === null && (payload !== pressedButton || tempNotes!==notes)) {
-            setNotes(notes => tempNotes)
+            // setNotes(notes => tempNotes)
             // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
             setShow(false);
@@ -185,7 +187,7 @@ export default function AttendanceCard() {
     }
 
 
-    function updateLocalAttendance(payload) {
+    function updateLocalAttendance(payload, newNotes) {
         console.log("Updating internal attendance, after button-press event", payload);
         var matchFlag = false;
         for (const item of todaysAttendance) {
@@ -194,10 +196,19 @@ export default function AttendanceCard() {
                 matchFlag = true;
             }
             if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
-                console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
+                // console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
+                console.log("Updated internal attendance of", mail, "from [", item.WorkLocation, "] to [", payload, "]");
+
                 item.WorkLocation = payload;
                 matchFlag = true;
             }
+
+            if (item.SK === mail && item.PK === getFormattedDate() && item.NOTES !== newNotes) {
+                console.log("Updated internal notes of", mail, "from [", item.NOTES, "] to [", newNotes, "]");
+                item.NOTES = newNotes;
+                matchFlag = true;
+            }
+
         }
         if (!matchFlag) {
             // insert new entry
@@ -205,10 +216,11 @@ export default function AttendanceCard() {
                 "SK": mail,
                 "WorkLocation": payload,
                 "PK": getFormattedDate(),
-                "NOTES": notes
+                "NOTES": newNotes
             }
             todaysAttendance.push(obj);
         }
+
 
         updateAtLists();
     }
@@ -220,7 +232,8 @@ export default function AttendanceCard() {
         setTempNotes(tempNotes => value)
 
         if (value.length >= 30) {
-            setNotesError(notesError => "Allowed length upto 30 char. Extra chars will be trimmed.")
+            setNotesError(notesError => "Allowed length upto 30 char.")
+
         }
         if (value.search(/[*<{}>!@#$%^=]/i) >= 0) {
             setNotesError(notesError => "<{}>*!@#$%^* special chars not allowed.")
@@ -292,8 +305,10 @@ export default function AttendanceCard() {
                     <br></br>
                     {/* <label for="inputPassword5" class="form-label">Password</label> */}
                     {/* <input type="text" onChange={(e) => setNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
-                    <input type="text" onChange={(e) => handleNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
+                    {/* <input type="text" onChange={(e) => handleNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
                     {/* <input type="text" onChange={(e) => setTempNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
+                    <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
+
                     <div id="notesHelpBlock" className="form-text">
                         Additional notes eg. customer name, location or purpose.
                     </div>

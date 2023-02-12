@@ -9,6 +9,9 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+12 Feb 2023
+- fixed defect on notes. Notes not pushing to db due to state changes.
+
 10 Feb 2023
 - Store notes
 
