@@ -18,3 +18,7 @@ export function getFormattedDate() {
 
     return formatted_date;
 }
+
+export function getISODate() {
+    // TO DO
+}

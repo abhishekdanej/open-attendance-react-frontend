@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav.js";
-import { Redirect, useNavigate, redirect, Route, Routes } from "react-router-dom";
+import {  useNavigate, Route, Routes } from "react-router-dom";
 import MyAtPane from "./MyAtPane";
 // import MessageToast from "./MessageToast";
 

@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 // import AtButton from "./Button";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function AttendanceCard() {
 
@@ -203,7 +203,6 @@ export default function AttendanceCard() {
 
     function storeAttendance(payload) {
 
-        // setPressedButton(payload);
         // add content type header to object
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");

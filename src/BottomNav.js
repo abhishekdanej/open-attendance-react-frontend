@@ -10,7 +10,8 @@ export default function BottomNav() {
         <div className="row">
           <div className="col">
             <span className="navbar-text active">
-              <Link to="/team">👨‍👨‍👧‍👦</Link>
+              <Link to="/team">👨‍👨‍👧‍👦</Link><br/>
+              Team
             </span>
           </div>
 
@@ -21,7 +22,8 @@ export default function BottomNav() {
 
           <div className="col">
             <span className="navbar-text">
-              <Link to="/me">🐵</Link>
+              <Link to="/me">🐵</Link><br/>
+              Me
             </span>
           </div>
         </div>
