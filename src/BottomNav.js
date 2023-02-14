@@ -5,7 +5,7 @@ export default function BottomNav() {
   return (
 
 
-    <nav className="navbar fixed-bottom bg-body-tertiary border-top border-secondary-subtle">
+    <nav className="navbar fixed-bottom bg-white  border-top border-secondary-subtle">
       <div className="container-fluid justify-content-around">
         <div className="row">
           <div className="col">

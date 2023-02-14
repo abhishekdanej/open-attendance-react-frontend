@@ -4,7 +4,7 @@ export default function MyAtPane() {
     return (
         <>
 
-            <div className="card">
+            <div className="card mb-3">
                 <img src="img1.jpg" className="card-img-top" alt="Group of friends" />
                 <div className="card-body">
                     <h5 className="card-title">Coming Soon</h5>
@@ -16,45 +16,62 @@ export default function MyAtPane() {
             </div>
 
             <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action ">
-                    <div class="d-flex w-100 justify-content-between">
-                        {getUserFormattedDate()}
-                        <h5 class="mb-1">Meeting</h5>
-                        <p class="mb-1">Some placeholder content in a paragraph.</p>
-                        <small>3 days ago</small>
-                    </div>
-                    {/* <p class="mb-1">Some placeholder content in a paragraph.</p> */}
-                    {/* <small>And some small print.</small> */}
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div className="row">
-                        <div className="col-auto">
-                            {getUserFormattedDate()}
-                        </div>
-                        <div className="col">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Remote</h5>
-                                <small class="text-muted">3 days ago</small>
-                            </div>
-                            <p class="mb-1">Some placeholder content in a paragraph.</p>
-                            <small class="text-muted">And some muted small print.</small>
-                        </div>
-                    </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">Office</h5>
-                        <small class="text-muted">3 days ago</small>
-                    </div>
-                    <p class="mb-1">Some placeholder content in a paragraph.</p>
-                    <small class="text-muted">And some muted small print.</small>
-                </a>
 
+
+                <div className="list-group-item list-group-item-action mb-2">
+                    <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1 badge bg-dark text-wrap">14 Feb 2023, Tuesday</h5>
+                        <h5 className="mb-1 badge bg-primary text-wrap">Meeting</h5>
+                        {/* <small class="text-muted">3 days ago</small> */}
+                    </div>
+                    <span className="mb-1">
+                        <span className="fw-bold">Meeting</span>: Implementation review at IDBI Bank. Implementation review at IDBI Bank.
+                    </span>
+                </div>
+
+                <div className="list-group-item list-group-item-action mb-2">
+                    <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1 badge bg-dark text-wrap">13 Feb 2023, Monday</h5>
+                        <h5 className="mb-1 badge bg-warning text-wrap">Remote</h5>
+                        {/* <small class="text-muted">3 days ago</small> */}
+                    </div>
+                    <span className="mb-1">
+                        <span className="fw-bold">Remote</span>: SMAX VILT Training day 2.
+                    </span>
+                </div>
+
+                <div className="list-group-item list-group-item-action mb-2">
+                    <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1 badge bg-dark text-wrap">12 Feb 2023, Monday</h5>
+                        <h5 className="mb-1 badge bg-success text-wrap">Office</h5>
+                        {/* <small class="text-muted">3 days ago</small> */}
+                    </div>
+                    <span className="mb-1">
+                        {/* <span className="fw-bold">Office</span>: */}
+                        SMAX VILT Training day 2.
+                    </span>
+                </div>
+
+                <div className="list-group-item list-group-item-action mb-2">
+                    <div className="d-flex w-100 justify-content-between">
+                        <h5 className="mb-1 fs-6 badge bg-dark text-wrap">10 Feb 2023, Saturday</h5>
+                        <h5 className="mb-1 fs-6 badge bg-success text-wrap">Remote</h5>
+                        {/* <small class="text-muted">3 days ago</small> */}
+                    </div>
+                    <span className="mb-1">
+                        <span className="fw-bold">Remote</span>:
+                        {/* Gujarat gandhinagar visit, GSDC. */}
+                    </span>
+                </div>
+
+                {/*
                 <div className="list-group-item list-group-item-action">
                     <div class="d-flex flex-row align-items-center">
                         <div className="flex-grow-0 p-2 bg-dark ">
                             <span style={{ "color": "white" }}>
-                                24-Feb<br/>Sun
+                                <span className="fs-3 fw-bold">24</span>
+                                <br />
+                                <small>Feb</small>
                             </span>
                         </div>
                         <div className="p-2 w-80">
@@ -71,7 +88,7 @@ export default function MyAtPane() {
                     <div class="d-flex flex-row align-items-center">
                         <div className="flex-grow-0 p-2 bg-dark">
                             <span style={{ "color": "white" }}>
-                                04-Feb<br/>Wed
+                                04-Feb<br />Wed
                             </span>
                         </div>
                         <div className="p-2 w-80">
@@ -80,12 +97,12 @@ export default function MyAtPane() {
                                 <small class="text-muted">Wednesday</small>
                             </div>
                             &nbsp;
-                            {/* Implementation review at IDBI Bank which went well */}
+                            Implementation review at IDBI Bank which went well 
                         </div>
                     </div>
                 </div>
+                    */}
 
-  
             </div>
 
         </>
