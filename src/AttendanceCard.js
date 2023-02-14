@@ -163,6 +163,7 @@ export default function AttendanceCard() {
                 setPressedButton(payload);
                 updateLocalAttendance(payload, tempNotes);
                 setShowFlag(true);
+                setNotes(tempNotes);
                 // alert(JSON.parse(result).body)
             }
             )
@@ -182,7 +183,6 @@ export default function AttendanceCard() {
             // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
             setShow(false);
-            setNotes(tempNotes);
         } 
 
     }
