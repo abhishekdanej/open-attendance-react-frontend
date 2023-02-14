@@ -182,6 +182,7 @@ export default function AttendanceCard() {
             // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
             setShow(false);
+            setNotes(tempNotes);
         } 
 
     }
