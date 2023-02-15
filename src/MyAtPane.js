@@ -5,10 +5,13 @@ import { getFormattedDate, getISOFormattedDate, getUserFormattedDate } from "./U
 export default function MyAtPane() {
 
     const [atList, setAtList] = useState()
-    const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    const [mail, setMail] = useState(() => {
+        return JSON.parse(localStorage.getItem('mail')) || null
+    })
     const navigate = useNavigate();
-    const querySet = ["mcw"]
+    const querySet = new Set(["mcw"])
     const [atHistory, setAtHistory] = useState({})
+    const [query, setQuery] = useState()
 
     const colorClassKey = {
         'Meeting': "mb-1 fs-6 badge bg-primary text-wrap",
@@ -17,6 +20,7 @@ export default function MyAtPane() {
     }
 
 
+    /* WORKING
     useEffect(() => {
 
         console.log("In useEffect - atHistory");
@@ -30,18 +34,23 @@ export default function MyAtPane() {
         }
 
     }, [atHistory])
+    */
 
     useEffect(() => {
 
-        console.log("In useEffect - mail");
+        console.log("In useEffect - query");
         if (!mail) {
             console.log("Login not found, redirecting to Login page")
             navigate("/login");
+            return
         }
 
-        var query = querySet[0]
-
         console.log("GET query attendance attempt from server", query);
+
+        if (!querySet.has(query)) {
+            console.log("Invalid query", query, ", quitting.")
+            return
+        }
 
         const date = getISOFormattedDate();
 
@@ -67,7 +76,7 @@ export default function MyAtPane() {
             })
             .catch(error => console.log('FAILED to GET attendance, error', error));
 
-    }, [mail])
+    }, [query])
 
     return (
         <>
@@ -81,6 +90,27 @@ export default function MyAtPane() {
                 <div className="card-footer">
                     <small className="text-muted">Last updated 3 mins ago</small>
                 </div>
+            </div>
+
+            <div className="card mb-3">
+                <div className="card-header">
+                    <h5 className="card-title">Make a Selection</h5>
+                </div>
+                <div className="card-body">
+                    {/* <h5 className="card-title">Make a Selection</h5> */}
+                    <div className="d-flex justify-content-evenly btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input onChange={() => setQuery("mcw")} type="radio" className="btn-check" name="btnradio" id="btnradio1" autocomplete="off" />
+                        <label className="btn btn-outline-secondary" for="btnradio1">1 Week</label>
+
+                        <input onChange={() => setQuery("m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autocomplete="off" />
+                        <label className="btn btn-outline-secondary" for="btnradio2">2 Weeks</label>
+
+                        <input onChange={() => setQuery("m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autocomplete="off" />
+                        <label className="btn btn-outline-secondary" for="btnradio3">4 weeks</label>
+                    </div>
+
+                </div>
+
             </div>
 
             <div className="list-group">
@@ -131,27 +161,27 @@ export default function MyAtPane() {
 
 
                 {
-                
-                atHistory.WEEKDATA &&
-                Object.keys(atHistory.WEEKDATA).map(record => (
-                    // console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
 
-                        < div key = { atHistory.WEEKDATA[record].DATE } className = "list-group-item list-group-item-action mb-2" >
-                        <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1 fs-6 badge bg-dark text-wrap">{ new Date(atHistory.WEEKDATA[record].DATE).toDateString() }</h5>
-                            <h5 className={colorClassKey[atHistory.WEEKDATA[record].WORKLOCATION]}>{ atHistory.WEEKDATA[record].WORKLOCATION }</h5>
-                             {/* <h5 className="mb-1 fs-6 badge bg-success text-wrap">{ atHistory.WEEKDATA[record].WORKLOCATION }</h5> */}
+                    atHistory.WEEKDATA &&
+                    Object.keys(atHistory.WEEKDATA).map(record => (
+                        // console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
+
+                        < div key={atHistory.WEEKDATA[record].DATE} className="list-group-item list-group-item-action mb-2" >
+                            <div className="d-flex w-100 justify-content-between">
+                                <h5 className="mb-1 fs-6 badge bg-dark text-wrap">{new Date(atHistory.WEEKDATA[record].DATE).toDateString()}</h5>
+                                <h5 className={colorClassKey[atHistory.WEEKDATA[record].WORKLOCATION]}>{atHistory.WEEKDATA[record].WORKLOCATION}</h5>
+                                {/* <h5 className="mb-1 fs-6 badge bg-success text-wrap">{ atHistory.WEEKDATA[record].WORKLOCATION }</h5> */}
+                            </div>
+                            <span className="mb-1">
+                                {atHistory.WEEKDATA[record].NOTES}
+                            </span>
                         </div>
-                        <span className="mb-1">
-                        { atHistory.WEEKDATA[record].NOTES }
-                        </span>
-                    </div>
 
-                ))
-                
+                    ))
+
                 }
 
-        </div>
+            </div>
 
         </>
     )

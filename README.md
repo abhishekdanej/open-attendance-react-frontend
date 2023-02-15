@@ -9,6 +9,9 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+15 Feb 2023
+- History Attendance available for Self
+
 11 Feb 2023
 - Enabled tabs for Team and Me
 

@@ -22,7 +22,10 @@ export default function AttendanceCard() {
     const handleShow = () => setShow(true);
     const [pressedButton, setPressedButton] = useState();
     const [showFlag, setShowFlag] = useState(null);
-    const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    // const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    const [mail, setMail] = useState(() => {
+        return JSON.parse(localStorage.getItem('mail')) || null
+    })
 
     const [todaysAttendance, setTodaysAttendance] = useState([]);
 
@@ -100,6 +103,7 @@ export default function AttendanceCard() {
         if(!mail) {
             console.log("Login not found, redirecting to Login page")
             navigate("/login");
+            return
           }
         
         console.log("GET attendance attempt from server");
