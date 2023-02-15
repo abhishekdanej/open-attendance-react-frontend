@@ -1,13 +1,81 @@
-import { getUserFormattedDate } from "./Utilities";
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { getFormattedDate, getISOFormattedDate, getUserFormattedDate } from "./Utilities";
 
 export default function MyAtPane() {
+
+    const [atList, setAtList] = useState()
+    const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    const navigate = useNavigate();
+    const querySet = ["mcw"]
+    const [atHistory, setAtHistory] = useState({})
+
+    const colorClassKey = {
+        'Meeting': "mb-1 fs-6 badge bg-primary text-wrap",
+        'Remote': "mb-1 fs-6 badge bg-warning text-wrap",
+        'Office': "mb-1 fs-6 badge bg-success text-wrap",
+    }
+
+
+    useEffect(() => {
+
+        console.log("In useEffect - atHistory");
+
+        if (atHistory.WEEKDATA) {
+            console.log("Object keys")
+            console.log(Object.keys(atHistory.WEEKDATA))
+            Object.keys(atHistory.WEEKDATA).map(record => {
+                console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
+            })
+        }
+
+    }, [atHistory])
+
+    useEffect(() => {
+
+        console.log("In useEffect - mail");
+        if (!mail) {
+            console.log("Login not found, redirecting to Login page")
+            navigate("/login");
+        }
+
+        var query = querySet[0]
+
+        console.log("GET query attendance attempt from server", query);
+
+        const date = getISOFormattedDate();
+
+        var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
+        url = url + "&mail=" + mail;
+        url = url + "&query=" + query
+
+        // working
+        fetch(url)
+            .then(response => response.json())
+            .then((result) => {
+                console.log("Received from server:", result.body);
+                console.log(JSON.stringify(result.body));
+
+                if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+                    console.log("Received attendance history is different than local attendance history, updating local attendance.");
+                    setAtHistory(result.body);
+                    // updateAtLists(result.body);
+                } else {
+                    console.log("Received attendance history is same as local attendance history");
+                }
+
+            })
+            .catch(error => console.log('FAILED to GET attendance, error', error));
+
+    }, [mail])
+
     return (
         <>
 
             <div className="card mb-3">
                 <img src="img1.jpg" className="card-img-top" alt="Group of friends" />
                 <div className="card-body">
-                    <h5 className="card-title">Coming Soon</h5>
+                    <h5 className="card-title">Limited Preview Feature</h5>
                     <p className="card-text">History of your work location (visible to you only).</p>
                 </div>
                 <div className="card-footer">
@@ -15,95 +83,75 @@ export default function MyAtPane() {
                 </div>
             </div>
 
-            <div class="list-group">
+            <div className="list-group">
 
 
-                <div className="list-group-item list-group-item-action mb-2">
+                {/* <div className="list-group-item list-group-item-action mb-2">
                     <div className="d-flex w-100 justify-content-between">
                         <h5 className="mb-1 badge bg-dark text-wrap">14 Feb 2023, Tuesday</h5>
                         <h5 className="mb-1 badge bg-primary text-wrap">Meeting</h5>
-                        {/* <small class="text-muted">3 days ago</small> */}
+                        <small class="text-muted">3 days ago</small>
                     </div>
                     <span className="mb-1">
                         <span className="fw-bold">Meeting</span>: Implementation review at IDBI Bank. Implementation review at IDBI Bank.
                     </span>
-                </div>
+                </div> */}
 
-                <div className="list-group-item list-group-item-action mb-2">
+                {/* <div className="list-group-item list-group-item-action mb-2">
                     <div className="d-flex w-100 justify-content-between">
                         <h5 className="mb-1 badge bg-dark text-wrap">13 Feb 2023, Monday</h5>
                         <h5 className="mb-1 badge bg-warning text-wrap">Remote</h5>
-                        {/* <small class="text-muted">3 days ago</small> */}
                     </div>
                     <span className="mb-1">
                         <span className="fw-bold">Remote</span>: SMAX VILT Training day 2.
                     </span>
-                </div>
+                </div> */}
 
-                <div className="list-group-item list-group-item-action mb-2">
+
+                {/* <div className="list-group-item list-group-item-action mb-2">
                     <div className="d-flex w-100 justify-content-between">
                         <h5 className="mb-1 badge bg-dark text-wrap">12 Feb 2023, Monday</h5>
                         <h5 className="mb-1 badge bg-success text-wrap">Office</h5>
-                        {/* <small class="text-muted">3 days ago</small> */}
                     </div>
                     <span className="mb-1">
-                        {/* <span className="fw-bold">Office</span>: */}
+                        <span className="fw-bold">Office</span>:
                         SMAX VILT Training day 2.
                     </span>
-                </div>
+                </div> */}
 
-                <div className="list-group-item list-group-item-action mb-2">
+                {/* <div className="list-group-item list-group-item-action mb-2">
                     <div className="d-flex w-100 justify-content-between">
                         <h5 className="mb-1 fs-6 badge bg-dark text-wrap">10 Feb 2023, Saturday</h5>
                         <h5 className="mb-1 fs-6 badge bg-success text-wrap">Remote</h5>
-                        {/* <small class="text-muted">3 days ago</small> */}
                     </div>
                     <span className="mb-1">
-                        <span className="fw-bold">Remote</span>:
-                        {/* Gujarat gandhinagar visit, GSDC. */}
+                        <span className="fw-bold">Remote</span>: Implementation review at IDBI Bank
                     </span>
-                </div>
+                </div> */}
 
-                {/*
-                <div className="list-group-item list-group-item-action">
-                    <div class="d-flex flex-row align-items-center">
-                        <div className="flex-grow-0 p-2 bg-dark ">
-                            <span style={{ "color": "white" }}>
-                                <span className="fs-3 fw-bold">24</span>
-                                <br />
-                                <small>Feb</small>
-                            </span>
+
+                {
+                
+                atHistory.WEEKDATA &&
+                Object.keys(atHistory.WEEKDATA).map(record => (
+                    // console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
+
+                        < div key = { atHistory.WEEKDATA[record].DATE } className = "list-group-item list-group-item-action mb-2" >
+                        <div className="d-flex w-100 justify-content-between">
+                            <h5 className="mb-1 fs-6 badge bg-dark text-wrap">{ new Date(atHistory.WEEKDATA[record].DATE).toDateString() }</h5>
+                            <h5 className={colorClassKey[atHistory.WEEKDATA[record].WORKLOCATION]}>{ atHistory.WEEKDATA[record].WORKLOCATION }</h5>
+                             {/* <h5 className="mb-1 fs-6 badge bg-success text-wrap">{ atHistory.WEEKDATA[record].WORKLOCATION }</h5> */}
                         </div>
-                        <div className="p-2 w-80">
-                            <div className="d-flex justify-content-between">
-                                <h5>Meeting</h5>
-                                <small class="text-muted">Sunday</small>
-                            </div>
-                            Implementation review at IDBI Bank
-                        </div>
+                        <span className="mb-1">
+                        { atHistory.WEEKDATA[record].NOTES }
+                        </span>
                     </div>
-                </div>
 
-                <div className="list-group-item list-group-item-action">
-                    <div class="d-flex flex-row align-items-center">
-                        <div className="flex-grow-0 p-2 bg-dark">
-                            <span style={{ "color": "white" }}>
-                                04-Feb<br />Wed
-                            </span>
-                        </div>
-                        <div className="p-2 w-80">
-                            <div className="d-flex justify-content-between">
-                                <h5>Remote</h5>
-                                <small class="text-muted">Wednesday</small>
-                            </div>
-                            &nbsp;
-                            Implementation review at IDBI Bank which went well 
-                        </div>
-                    </div>
-                </div>
-                    */}
+                ))
+                
+                }
 
-            </div>
+        </div>
 
         </>
     )
