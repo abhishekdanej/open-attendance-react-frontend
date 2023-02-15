@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { getFormattedDate, getISOFormattedDate, getUserFormattedDate } from "./Utilities";
 
-export default function MyAtPane() {
+export default function MyAtPane({handleQuerySelect, query}) {
 
     const [atList, setAtList] = useState()
     const [mail, setMail] = useState(() => {
@@ -11,12 +11,12 @@ export default function MyAtPane() {
     const navigate = useNavigate();
     const querySet = new Set(["mcw"])
     const [atHistory, setAtHistory] = useState({})
-    const [query, setQuery] = useState()
+    // const [query, setQuery] = useState()
 
     const colorClassKey = {
         'Meeting': "mb-1 fs-6 badge bg-primary text-wrap",
         'Remote': "mb-1 fs-6 badge bg-warning text-wrap",
-        'Office': "mb-1 fs-6 badge bg-success text-wrap",
+        'Office': "mb-1 fs-6 badge bg-success text-wrap"
     }
 
 
@@ -38,7 +38,7 @@ export default function MyAtPane() {
 
     useEffect(() => {
 
-        console.log("In useEffect - query");
+        console.log("In useEffect - query", query);
         if (!mail) {
             console.log("Login not found, redirecting to Login page")
             navigate("/login");
@@ -78,6 +78,7 @@ export default function MyAtPane() {
 
     }, [query])
 
+
     return (
         <>
 
@@ -99,13 +100,18 @@ export default function MyAtPane() {
                 <div className="card-body">
                     {/* <h5 className="card-title">Make a Selection</h5> */}
                     <div className="d-flex justify-content-evenly btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input onChange={() => setQuery("mcw")} type="radio" className="btn-check" name="btnradio" id="btnradio1" autocomplete="off" />
+                        <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check" 
+                            name="mcw" id="btnradio1" autocomplete="off" checked={"mcw"===query? true : false} />
                         <label className="btn btn-outline-secondary" for="btnradio1">1 Week</label>
 
-                        <input onChange={() => setQuery("m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autocomplete="off" />
+                        {/* <input onChange={() => setQuery("m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autocomplete="off" /> */}
+                        <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check" 
+                            name="m2w" id="btnradio2" autocomplete="off" checked={"m2w"===query? true : false}/>
                         <label className="btn btn-outline-secondary" for="btnradio2">2 Weeks</label>
 
-                        <input onChange={() => setQuery("m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autocomplete="off" />
+                        {/* <input onChange={() => setQuery("m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autocomplete="off" /> */}
+                        <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check" 
+                            name="m4w" id="btnradio3" autocomplete="off" checked={"m4w"===query? true : false}/>
                         <label className="btn btn-outline-secondary" for="btnradio3">4 weeks</label>
                     </div>
 

@@ -13,6 +13,8 @@ function App() {
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   const navigate = useNavigate();
 
+  const [query, setQuery] = useState(null)
+
   useEffect(() => {
     console.log("In useEffect mail")
     if (!mail) {
@@ -205,6 +207,11 @@ function App() {
 
   }
 
+  function handleQuerySelect(payload) {
+    console.log('User query select: ' + payload);
+    setQuery(payload)
+  }
+
   /*
   function handleButtonSubmit(payload) {
 
@@ -232,7 +239,7 @@ function App() {
 
         <Routes>
           <Route path="/team" element={<AttendanceCard />} />
-          <Route path="/me" element={<MyAtPane />} />
+          <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} />
           <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
         </Routes>
 
