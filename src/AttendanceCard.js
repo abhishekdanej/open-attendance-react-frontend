@@ -72,8 +72,8 @@ export default function AttendanceCard() {
                             console.log("Attendance updated for", mail, "from [", pressedButton, "] to [", item.WorkLocation, "]");
                             // break;
                         }
-                        
-                        if(notes !== item.NOTES) {
+
+                        if (notes !== item.NOTES) {
                             console.log("Notes updated for", mail, "from [", notes, "] to [", item.NOTES, "]");
                             setNotes(notes => item.NOTES)
                         }
@@ -143,7 +143,7 @@ export default function AttendanceCard() {
             "mail": mail,
             "workLocation": payload,
             "date": getFormattedDate(),
-            "notes" : tempNotes
+            "notes": tempNotes
         });
         // create a JSON object with parameters for API call and store in a variable
         var requestOptions = {
@@ -176,14 +176,14 @@ export default function AttendanceCard() {
 
         // console.log("Button pressed:", payload, "notes:", tempNotes);
         console.log("Button pressed:", payload, ", temp-notes:", tempNotes, ", notes:", notes);
-        
+
         // send attendance if pressed button is different that current selection
-        if (notesError === null && (payload !== pressedButton || tempNotes!==notes)) {
+        if (notesError === null && (payload !== pressedButton || tempNotes !== notes)) {
             // setNotes(notes => tempNotes)
             // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
             setShow(false);
-        } 
+        }
 
     }
 
@@ -229,6 +229,7 @@ export default function AttendanceCard() {
 
     function handleNotes(value) {
 
+        value = value.trim()
         setNotesError(notesError => null)
         setTempNotes(tempNotes => value)
 
@@ -296,10 +297,18 @@ export default function AttendanceCard() {
 
 
             <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
-                <Offcanvas.Header closeButton>
-                    <Offcanvas.Title></Offcanvas.Title>
-                </Offcanvas.Header>
-                <Offcanvas.Body>
+                {/* <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>
+                        Submit
+                    </Offcanvas.Title>
+                </Offcanvas.Header> */}
+                <Offcanvas.Body closeButton>
+                    <div id="notesHelpBlock" className="form-text">
+                        <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
+                        <p>
+                            optional notes eg. customer name, location or reason
+                        </p>
+                    </div>
                     <MyButton name="Office" className='btn btn-primary btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Meeting" className='btn btn-success btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Remote" className='btn btn-warning btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
@@ -308,11 +317,7 @@ export default function AttendanceCard() {
                     {/* <input type="text" onChange={(e) => setNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
                     {/* <input type="text" onChange={(e) => handleNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
                     {/* <input type="text" onChange={(e) => setTempNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
-                    <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
 
-                    <div id="notesHelpBlock" className="form-text">
-                        Additional notes eg. customer name, location or purpose.
-                    </div>
                     <div id="notesErrorBlock" className="form-text text-danger">
                         {notesError}
                     </div>
