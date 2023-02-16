@@ -299,6 +299,7 @@ export default function AttendanceCard() {
 
     function handleNotes(value) {
 
+        value = value.trim()
         setNotesError(notesError => null)
         setTempNotes(tempNotes => value)
 
@@ -378,18 +379,18 @@ export default function AttendanceCard() {
 
 
             <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
-                <Offcanvas.Header closeButton>
+                {/* <Offcanvas.Header closeButton>
                     <Offcanvas.Title></Offcanvas.Title>
-                </Offcanvas.Header>
+                </Offcanvas.Header> */}
                 <Offcanvas.Body>
+                    <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
+                    <div id="notesHelpBlock" className="form-text p-2">
+                        Optional notes - customer name, location or reason.
+                    </div>
                     <MyButton name="Office" className='btn btn-primary btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Meeting" className='btn btn-success btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Remote" className='btn btn-warning btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <br></br>
-                    <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
-                    <div id="notesHelpBlock" className="form-text">
-                        Additional notes eg. customer name, location or purpose.
-                    </div>
                     <div id="notesErrorBlock" className="form-text text-danger">
                         {notesError}
                     </div>

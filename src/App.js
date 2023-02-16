@@ -1,12 +1,15 @@
 // import Button from "./Button";
 import MailInput from "./MailInput";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav.js";
-import {  useNavigate, Route, Routes } from "react-router-dom";
+import { useNavigate, Route, Routes } from "react-router-dom";
 import MyAtPane from "./MyAtPane";
+import { getISOFormattedDate } from "./Utilities";
 // import MessageToast from "./MessageToast";
+
+export const HistoryContext = createContext();
 
 function App() {
 
@@ -14,6 +17,8 @@ function App() {
   const navigate = useNavigate();
 
   const [query, setQuery] = useState(null)
+  const [atHistory, setAtHistory] = useState({})
+  const querySet = new Set(["mcw"])
 
   useEffect(() => {
     console.log("In useEffect mail")
@@ -24,6 +29,50 @@ function App() {
       navigate("/team")
     }
   }, [mail])
+
+
+  useEffect(() => {
+
+    console.log("In useEffect - query", query);
+    if (!mail) {
+      console.log("Login not found, redirecting to Login page")
+      navigate("/login");
+      return
+    }
+
+    console.log("GET query attendance attempt from server", query);
+
+    if (!querySet.has(query)) {
+      console.log("Invalid query", query, ", quitting.")
+      return
+    }
+
+    const date = getISOFormattedDate();
+
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
+    url = url + "&mail=" + mail;
+    url = url + "&query=" + query
+
+    // working
+    fetch(url)
+      .then(response => response.json())
+      .then((result) => {
+        console.log("Received from server:", result.body);
+        console.log(JSON.stringify(result.body));
+
+        if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+          console.log("Received attendance history is different than local attendance history, updating local attendance.");
+          setAtHistory(result.body);
+          // updateAtLists(result.body);
+        } else {
+          console.log("Received attendance history is same as local attendance history");
+        }
+
+      })
+      .catch(error => console.log('FAILED to GET attendance, error', error));
+
+  }, [query])
+
 
   // const [pressedButton, setPressedButton] = useState();
   // const [mail, setMail] = useState(null);
@@ -207,10 +256,10 @@ function App() {
 
   }
 
-  function handleQuerySelect(payload) {
-    console.log('User query select: ' + payload);
-    setQuery(payload)
-  }
+  // function handleQuerySelect(payload) {
+  //   console.log('User query select: ' + payload);
+  //   setQuery(payload)
+  // }
 
   /*
   function handleButtonSubmit(payload) {
@@ -239,7 +288,12 @@ function App() {
 
         <Routes>
           <Route path="/team" element={<AttendanceCard />} />
-          <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} />
+          {/* <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} /> */}
+          <Route path="/me" element={
+            <HistoryContext.Provider value={{ query, setQuery, atHistory, mail }}>
+              <MyAtPane />
+            </HistoryContext.Provider>
+          } />
           <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
         </Routes>
 

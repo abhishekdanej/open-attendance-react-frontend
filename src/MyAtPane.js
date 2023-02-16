@@ -1,23 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { HistoryContext } from "./App";
 import { getFormattedDate, getISOFormattedDate, getUserFormattedDate } from "./Utilities";
 
-export default function MyAtPane({handleQuerySelect, query}) {
+// export default function MyAtPane({handleQuerySelect, query}) {
+export default function MyAtPane() {
 
-    const [atList, setAtList] = useState()
-    const [mail, setMail] = useState(() => {
-        return JSON.parse(localStorage.getItem('mail')) || null
-    })
+    // const [mail, setMail] = useState(() => {
+    //     return JSON.parse(localStorage.getItem('mail')) || null
+    // })
     const navigate = useNavigate();
-    const querySet = new Set(["mcw"])
-    const [atHistory, setAtHistory] = useState({})
+    // const querySet = new Set(["mcw"])
+    // const [atHistory, setAtHistory] = useState({})
     // const [query, setQuery] = useState()
+
+    const {query, setQuery, atHistory, mail} = useContext(HistoryContext)
+
 
     const colorClassKey = {
         'Meeting': "mb-1 fs-6 badge bg-primary text-wrap",
         'Remote': "mb-1 fs-6 badge bg-warning text-wrap",
         'Office': "mb-1 fs-6 badge bg-success text-wrap"
     }
+
+    useEffect(() => {
+        console.log("In useEffect mail")
+        if (!mail) {
+          console.log("Login not found, redirecting to Login page")
+          navigate("/login");
+        }
+      }, [mail])
 
 
     /* WORKING
@@ -36,47 +48,92 @@ export default function MyAtPane({handleQuerySelect, query}) {
     }, [atHistory])
     */
 
-    useEffect(() => {
+    // const handleQuerySelect = useCallback((newQuery) => {
 
-        console.log("In useEffect - query", query);
-        if (!mail) {
-            console.log("Login not found, redirecting to Login page")
-            navigate("/login");
-            return
-        }
+    //     setQuery(newQuery)
+    //     // query = value
 
-        console.log("GET query attendance attempt from server", query);
+    //     console.log("In useCallback - query", newQuery);
+    //     if (!mail) {
+    //         console.log("Login not found, redirecting to Login page")
+    //         navigate("/login");
+    //         return
+    //     }
 
-        if (!querySet.has(query)) {
-            console.log("Invalid query", query, ", quitting.")
-            return
-        }
+    //     console.log("GET query attendance attempt from server", newQuery);
 
-        const date = getISOFormattedDate();
+    //     if (!querySet.has(newQuery)) {
+    //         console.log("Invalid query", newQuery, ", quitting.")
+    //         return
+    //     }
 
-        var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
-        url = url + "&mail=" + mail;
-        url = url + "&query=" + query
+    //     const date = getISOFormattedDate();
 
-        // working
-        fetch(url)
-            .then(response => response.json())
-            .then((result) => {
-                console.log("Received from server:", result.body);
-                console.log(JSON.stringify(result.body));
+    //     var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
+    //     url = url + "&mail=" + mail;
+    //     url = url + "&query=" + newQuery
 
-                if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
-                    console.log("Received attendance history is different than local attendance history, updating local attendance.");
-                    setAtHistory(result.body);
-                    // updateAtLists(result.body);
-                } else {
-                    console.log("Received attendance history is same as local attendance history");
-                }
+    //     // working
+    //     fetch(url)
+    //         .then(response => response.json())
+    //         .then((result) => {
+    //             console.log("Received from server:", result.body);
+    //             console.log(JSON.stringify(result.body));
 
-            })
-            .catch(error => console.log('FAILED to GET attendance, error', error));
+    //             if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+    //                 console.log("Received attendance history is different than local attendance history, updating local attendance.");
+    //                 setAtHistory(result.body);
+    //                 // updateAtLists(result.body);
+    //             } else {
+    //                 console.log("Received attendance history is same as local attendance history");
+    //             }
 
-    }, [query])
+    //         })
+    //         .catch(error => console.log('FAILED to GET attendance, error', error));
+
+    // },[query])
+
+    // useEffect(() => {
+
+    //     console.log("In useEffect - query", query);
+    //     if (!mail) {
+    //         console.log("Login not found, redirecting to Login page")
+    //         navigate("/login");
+    //         return
+    //     }
+
+    //     console.log("GET query attendance attempt from server", query);
+
+    //     if (!querySet.has(query)) {
+    //         console.log("Invalid query", query, ", quitting.")
+    //         return
+    //     }
+
+    //     const date = getISOFormattedDate();
+
+    //     var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
+    //     url = url + "&mail=" + mail;
+    //     url = url + "&query=" + query
+
+    //     // working
+    //     fetch(url)
+    //         .then(response => response.json())
+    //         .then((result) => {
+    //             console.log("Received from server:", result.body);
+    //             console.log(JSON.stringify(result.body));
+
+    //             if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+    //                 console.log("Received attendance history is different than local attendance history, updating local attendance.");
+    //                 setAtHistory(result.body);
+    //                 // updateAtLists(result.body);
+    //             } else {
+    //                 console.log("Received attendance history is same as local attendance history");
+    //             }
+
+    //         })
+    //         .catch(error => console.log('FAILED to GET attendance, error', error));
+
+    // }, [query])
 
 
     return (
@@ -100,19 +157,20 @@ export default function MyAtPane({handleQuerySelect, query}) {
                 <div className="card-body">
                     {/* <h5 className="card-title">Make a Selection</h5> */}
                     <div className="d-flex justify-content-evenly btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check" 
-                            name="mcw" id="btnradio1" autocomplete="off" checked={"mcw"===query? true : false} />
-                        <label className="btn btn-outline-secondary" for="btnradio1">1 Week</label>
+                        <input onChange={() => setQuery(query => "mcw")} type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={"mcw"===query? true : false} />
+                        {/* <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check"  
+                            name="mcw" id="btnradio1" autocomplete="off" checked={"mcw"===query? true : false} /> */}
+                        <label className="btn btn-outline-secondary" htmlFor="btnradio1">1 Week</label>
 
-                        {/* <input onChange={() => setQuery("m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autocomplete="off" /> */}
-                        <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check" 
-                            name="m2w" id="btnradio2" autocomplete="off" checked={"m2w"===query? true : false}/>
-                        <label className="btn btn-outline-secondary" for="btnradio2">2 Weeks</label>
+                        <input onChange={() => setQuery(query => "m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={"m2w"===query? true : false}/>
+                        {/* <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check"  
+                            name="m2w" id="btnradio2" autocomplete="off" checked={"m2w"===query? true : false}/> */}
+                        <label className="btn btn-outline-secondary" htmlFor="btnradio2">2 Weeks</label>
 
-                        {/* <input onChange={() => setQuery("m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autocomplete="off" /> */}
-                        <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check" 
-                            name="m4w" id="btnradio3" autocomplete="off" checked={"m4w"===query? true : false}/>
-                        <label className="btn btn-outline-secondary" for="btnradio3">4 weeks</label>
+                        <input onChange={() => setQuery(query => "m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" checked={"m4w"===query? true : false}/>
+                        {/* <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check"  
+                            name="m4w" id="btnradio3" autocomplete="off" checked={"m4w"===query? true : false}/> */}
+                        <label className="btn btn-outline-secondary" htmlFor="btnradio3">4 weeks</label>
                     </div>
 
                 </div>
