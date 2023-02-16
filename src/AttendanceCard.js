@@ -1,15 +1,20 @@
 // import Dropdown from 'react-bootstrap/Dropdown';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getUserFormattedDate, getFormattedDate } from "./Utilities";
 import Button from 'react-bootstrap/Button';
 // import AtButton from "./Button";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
 import { useNavigate } from 'react-router-dom';
+import { TeamContext } from './App';
 
 export default function AttendanceCard() {
 
     const [show, setShow] = useState(false);
+
+
+    const {mail, todaysAttendance, setTodaysAttendance} = useContext(TeamContext)
+
 
     const handleClose = () => {
         setShow(false);
@@ -23,11 +28,11 @@ export default function AttendanceCard() {
     const [pressedButton, setPressedButton] = useState();
     const [showFlag, setShowFlag] = useState(null);
     // const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
-    const [mail, setMail] = useState(() => {
-        return JSON.parse(localStorage.getItem('mail')) || null
-    })
+    // const [mail, setMail] = useState(() => {
+    //     return JSON.parse(localStorage.getItem('mail')) || null
+    // })
 
-    const [todaysAttendance, setTodaysAttendance] = useState([]);
+    // const [todaysAttendance, setTodaysAttendance] = useState([]);
 
     const [remoteList, setRemoteList] = useState([]);
     const [officeList, setOfficeList] = useState([]);
@@ -36,9 +41,6 @@ export default function AttendanceCard() {
     const [tempNotes, setTempNotes] = useState(null);
     const [notesError, setNotesError] = useState(null);
 
-    // const [remoteCount, setRemoteCount] = useState(0);
-    // const [officeCount, setOfficeCount] = useState(0);
-    // const [meetingCount, setMeetingCount] = useState(0);
 
     useEffect(() => {
         // updateAtLists();
@@ -91,7 +93,7 @@ export default function AttendanceCard() {
         setOfficeList(officeList => oList)
 
         // console.log("Office count:", oCount, ", Remote count:", rCount, ", Meeting count:", mCount);
-        console.log("Office size:", officeList.length, ", Remote size:", remoteList.length, ", Meeting size:", meetingList.length);
+        console.log("Office size:", oList.length, ", Remote size:", rList.length, ", Meeting size:", mList.length);
 
     }, [todaysAttendance]);
 
@@ -106,103 +108,32 @@ export default function AttendanceCard() {
             return
           }
         
-        console.log("GET attendance attempt from server");
+        // console.log("GET attendance attempt from server");
 
-        const fDate = getFormattedDate();
+        // const fDate = getFormattedDate();
 
-        var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
-        url = url + "&mail=" + mail;
+        // var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
+        // url = url + "&mail=" + mail;
 
-        // working
-        fetch(url)
-            .then(response => response.json())
-            .then((result) => {
-                console.log("Received from server:", result.body);
-                console.log(JSON.stringify(result.body));
+        // 
+        // fetch(url)
+        //     .then(response => response.json())
+        //     .then((result) => {
+        //         console.log("Received from server:", result.body);
+        //         console.log(JSON.stringify(result.body));
 
-                if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
-                    console.log("Received attendance is different than local attendance, updating local attendance.");
-                    setTodaysAttendance(result.body);
-                    // updateAtLists(result.body);
-                } else {
-                    console.log("Received attendance is same as local attendance");
-                }
+        //         if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
+        //             console.log("Received attendance is different than local attendance, updating local attendance.");
+        //             setTodaysAttendance(result.body);
+        //             // updateAtLists(result.body);
+        //         } else {
+        //             console.log("Received attendance is same as local attendance");
+        //         }
 
-                // move this code to useEffect of todaysAttendance
-                /*
-                for (const item of result.body) {
-                    console.log(item.SK, 'comparing with', mail, fDate);
-                    // setTodaysAttendance(result.body);
-
-                    if (item.SK === mail && item.PK === fDate) {
-                        // console.log("Attendance is already marked for", mail, "as", pressedButton);
-                        if (pressedButton !== item.WorkLocation) {
-                            setPressedButton(pressedButton => item.WorkLocation);
-                            console.log("Attendance updated for", mail, "from [", pressedButton, "] to [", item.WorkLocation, "]");
-                            // break;
-                        }
-                        
-                        if(notes !== item.NOTES) {
-                            console.log("Notes updated for", mail, "from [", notes, "] to [", item.NOTES, "]");
-                            setNotes(notes => item.NOTES)
-                        }
-
-                        break;
-
-                    }
-                }
-                */
-
-            })
-            .catch(error => console.log('FAILED to GET attendance, error', error));
+        //     })
+        //     .catch(error => console.log('FAILED to GET attendance, error', error));
 
     }, [mail])
-
-
-    /* 
-     function updateAtLists() {
- 
-         console.log("In updateAtLists", todaysAttendance.length)
- 
-         var tofficeList = [];
-         var tmeetingList = [];
-         var tremoteList = [];
-         // var officeListItems = [];
-         // var meetingListItems = [];
-         // var anywhereListItems = []
- 
-         for (const item of todaysAttendance) {
-             console.log("checking: " + JSON.stringify(item));
-             if (item.WorkLocation === 'Office') {
-                 tofficeList.push(item);
-             }
-             if (item.WorkLocation === 'Remote') {
-                 tremoteList.push(item);
-             }
-             if (item.WorkLocation === 'Meeting') {
-                 tmeetingList.push(item);
-             }
- 
-         }
- 
-         //  <li class="list-group-item fs-5">Person A</li>
- 
-         console.log("Office size", tofficeList.length, ", Anywhere size:", tremoteList.length, ", Meeting size:", tmeetingList.length);
-         // }
- 
-         setOfficeList(officeList => tofficeList.map(record =>
-             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-         ));
-         setRemoteList(remoteList => tremoteList.map(record =>
-             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-         ));
-         setMeetingList(meetingList => tmeetingList.map(record =>
-             <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-         ));
- 
-     }
-     */
-
 
 
     function storeAttendance(payload) {

@@ -1,7 +1,6 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { HistoryContext } from "./App";
-import { getFormattedDate, getISOFormattedDate, getUserFormattedDate } from "./Utilities";
+import { MeContext } from "./App";
 
 // export default function MyAtPane({handleQuerySelect, query}) {
 export default function MyAtPane() {
@@ -14,7 +13,7 @@ export default function MyAtPane() {
     // const [atHistory, setAtHistory] = useState({})
     // const [query, setQuery] = useState()
 
-    const {query, setQuery, atHistory, mail} = useContext(HistoryContext)
+    const {query, setQuery, atHistory, mail} = useContext(MeContext)
 
 
     const colorClassKey = {

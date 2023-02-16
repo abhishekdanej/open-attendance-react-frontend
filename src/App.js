@@ -6,19 +6,25 @@ import Navbar from "./Navbar";
 import BottomNav from "./BottomNav.js";
 import { useNavigate, Route, Routes } from "react-router-dom";
 import MyAtPane from "./MyAtPane";
-import { getISOFormattedDate } from "./Utilities";
+import { getFormattedDate, getISOFormattedDate } from "./Utilities";
 // import MessageToast from "./MessageToast";
 
-export const HistoryContext = createContext();
+export const MeContext = createContext();
+export const TeamContext = createContext();
 
 function App() {
 
   const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   const navigate = useNavigate();
 
+  // ME
   const [query, setQuery] = useState(null)
   const [atHistory, setAtHistory] = useState({})
   const querySet = new Set(["mcw"])
+
+  // TEAM
+  const [todaysAttendance, setTodaysAttendance] = useState([]);
+
 
   useEffect(() => {
     console.log("In useEffect mail")
@@ -27,7 +33,35 @@ function App() {
       navigate("/login");
     } else {
       navigate("/team")
+
+      console.log("GET attendance attempt from server");
+
+      const fDate = getFormattedDate();
+
+      var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
+      url = url + "&mail=" + mail;
+
+      // working
+      fetch(url)
+          .then(response => response.json())
+          .then((result) => {
+              console.log("Received from server:", result.body);
+              console.log(JSON.stringify(result.body));
+
+              if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
+                  console.log("Received attendance is different than local attendance, updating local attendance.");
+                  setTodaysAttendance(result.body);
+                  // updateAtLists(result.body);
+              } else {
+                  console.log("Received attendance is same as local attendance");
+              }
+
+          })
+          .catch(error => console.log('FAILED to GET attendance, error', error));
+
+
     }
+
   }, [mail])
 
 
@@ -287,12 +321,17 @@ function App() {
         } */}
 
         <Routes>
-          <Route path="/team" element={<AttendanceCard />} />
+          <Route path="/team" element={
+            <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance }}>
+              <AttendanceCard />
+            </TeamContext.Provider>
+
+          } />
           {/* <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} /> */}
           <Route path="/me" element={
-            <HistoryContext.Provider value={{ query, setQuery, atHistory, mail }}>
+            <MeContext.Provider value={{ query, setQuery, atHistory, mail }}>
               <MyAtPane />
-            </HistoryContext.Provider>
+            </MeContext.Provider>
           } />
           <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
         </Routes>
