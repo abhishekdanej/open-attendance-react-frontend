@@ -18,3 +18,10 @@ export function getFormattedDate() {
 
     return formatted_date;
 }
+
+export function getISOFormattedDate() {
+    // TO DO
+    let today = new Date()
+    const isoFormatDate = today.toISOString().substring(0,10)
+    return isoFormatDate
+}

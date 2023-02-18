@@ -9,8 +9,17 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
-12 Feb 2023
-- fixed defect on notes. Notes not pushing to db due to state changes.
+18 Feb 2023
+- Sorting of history
+
+16 Feb 2023
+- Performance improvement, moved state and data download to parent component. 
+
+15 Feb 2023
+- History Attendance available for Self
+
+11 Feb 2023
+- Enabled tabs for Team and Me
 
 10 Feb 2023
 - Store notes

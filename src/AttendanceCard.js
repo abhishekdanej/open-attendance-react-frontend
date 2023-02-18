@@ -1,26 +1,38 @@
 // import Dropdown from 'react-bootstrap/Dropdown';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getUserFormattedDate, getFormattedDate } from "./Utilities";
 import Button from 'react-bootstrap/Button';
 // import AtButton from "./Button";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
+import { useNavigate } from 'react-router-dom';
+import { TeamContext } from './App';
 
 export default function AttendanceCard() {
 
     const [show, setShow] = useState(false);
+
+
+    const {mail, todaysAttendance, setTodaysAttendance} = useContext(TeamContext)
+
 
     const handleClose = () => {
         setShow(false);
         setTempNotes(tempNotes => notes)
         setNotesError(notesError => null)
     }
+
+    const navigate = useNavigate();
+
     const handleShow = () => setShow(true);
     const [pressedButton, setPressedButton] = useState();
     const [showFlag, setShowFlag] = useState(null);
-    const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    // const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+    // const [mail, setMail] = useState(() => {
+    //     return JSON.parse(localStorage.getItem('mail')) || null
+    // })
 
-    const [todaysAttendance, setTodaysAttendance] = useState([]);
+    // const [todaysAttendance, setTodaysAttendance] = useState([]);
 
     const [remoteList, setRemoteList] = useState([]);
     const [officeList, setOfficeList] = useState([]);
@@ -31,110 +43,101 @@ export default function AttendanceCard() {
 
 
     useEffect(() => {
-        updateAtLists();
+        // updateAtLists();
+
+        console.log("In useEffect todaysAttendance")
+
+        const fDate = getFormattedDate();
+        // var mCount = 0;
+        // var oCount = 0;
+        // var rCount = 0;
+        var mList = [];
+        var rList = [];
+        var oList = [];
+
+        for (const item of todaysAttendance) {
+            console.log("COMPARING received [", item.SK, '] with local -', mail, fDate);
+            // setTodaysAttendance(result.body);
+
+            if (item.SK === mail && item.PK === fDate) {
+                // console.log("Attendance is already marked for", mail, "as", pressedButton);
+                if (pressedButton !== item.WorkLocation) {
+                    setPressedButton(pressedButton => item.WorkLocation);
+                    console.log("Local attendance updated for", mail, "from [", pressedButton, "] to [", item.WorkLocation, "]");
+                    // break;
+                }
+
+                if (notes !== item.NOTES) {
+                    console.log("Local notes updated for", mail, "from [", notes, "] to [", item.NOTES, "]");
+                    setNotes(notes => item.NOTES)
+                    setTempNotes(tempNotes => item.NOTES)
+                }
+
+                // break;
+
+            }
+
+
+            // var t = item.WorkLocation === 'Remote' ? (rCount++) : null
+            // t = item.WorkLocation === 'Meeting' ? (mCount++) : null
+            if (item.WorkLocation === 'Remote') rList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
+            if (item.WorkLocation === 'Meeting') mList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
+            if (item.WorkLocation === 'Office') oList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
+        }
+
+        // setMeetingCount(meetingCount => mCount)
+        // setRemoteCount(remoteCount => rCount)
+        // setOfficeCount(officeCount => oCount)
+        setMeetingList(meetingList => mList)
+        setRemoteList(remoteList => rList)
+        setOfficeList(officeList => oList)
+
+        // console.log("Office count:", oCount, ", Remote count:", rCount, ", Meeting count:", mCount);
+        console.log("Office size:", oList.length, ", Remote size:", rList.length, ", Meeting size:", mList.length);
+
     }, [todaysAttendance]);
 
+    
 
     useEffect(() => {
 
-        console.log("In useEffect - todaysAttendance, mail, pressedbutton");
-        console.log("GET attendance attempt from server");
+        console.log("In useEffect - mail");
+        if(!mail) {
+            console.log("Login not found, redirecting to Login page")
+            navigate("/login");
+            return
+          }
+        
+        // console.log("GET attendance attempt from server");
 
-        const fDate = getFormattedDate();
+        // const fDate = getFormattedDate();
 
-        var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
-        url = url + "&mail=" + mail;
+        // var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
+        // url = url + "&mail=" + mail;
 
-        // working
-        fetch(url)
-            .then(response => response.json())
-            .then((result) => {
-                console.log("Received from server:", result.body);
-                console.log(JSON.stringify(result.body));
+        // 
+        // fetch(url)
+        //     .then(response => response.json())
+        //     .then((result) => {
+        //         console.log("Received from server:", result.body);
+        //         console.log(JSON.stringify(result.body));
 
-                if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
-                    console.log("Received attendance is different than local attendance, updating local attendance.");
-                    setTodaysAttendance(result.body);
-                    // updateAtLists(result.body);
-                } else {
-                    console.log("Received attendance is same as local attendance");
-                }
+        //         if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
+        //             console.log("Received attendance is different than local attendance, updating local attendance.");
+        //             setTodaysAttendance(result.body);
+        //             // updateAtLists(result.body);
+        //         } else {
+        //             console.log("Received attendance is same as local attendance");
+        //         }
 
-                // move this code to useEffect of todaysAttendance
-                for (const item of result.body) {
-                    console.log(item.SK, 'comparing with', mail, fDate);
-                    // setTodaysAttendance(result.body);
-
-                    if (item.SK === mail && item.PK === fDate) {
-                        // console.log("Attendance is already marked for", mail, "as", pressedButton);
-                        if (pressedButton !== item.WorkLocation) {
-                            setPressedButton(pressedButton => item.WorkLocation);
-                            console.log("Attendance updated for", mail, "from [", pressedButton, "] to [", item.WorkLocation, "]");
-                            // break;
-                        }
-
-                        if (notes !== item.NOTES) {
-                            console.log("Notes updated for", mail, "from [", notes, "] to [", item.NOTES, "]");
-                            setNotes(notes => item.NOTES)
-                        }
-
-                        break;
-
-                    }
-                }
-
-            })
-            .catch(error => console.log('FAILED to GET attendance, error', error));
+        //     })
+        //     .catch(error => console.log('FAILED to GET attendance, error', error));
 
     }, [mail])
 
 
-    function updateAtLists() {
-
-        console.log("In updateAtLists", todaysAttendance.length)
-
-        var tofficeList = [];
-        var tmeetingList = [];
-        var tremoteList = [];
-        // var officeListItems = [];
-        // var meetingListItems = [];
-        // var anywhereListItems = []
-
-        for (const item of todaysAttendance) {
-            console.log("checking: " + JSON.stringify(item));
-            if (item.WorkLocation === 'Office') {
-                tofficeList.push(item);
-            }
-            if (item.WorkLocation === 'Remote') {
-                tremoteList.push(item);
-            }
-            if (item.WorkLocation === 'Meeting') {
-                tmeetingList.push(item);
-            }
-
-        }
-
-        //  <li class="list-group-item fs-5">Person A</li>
-
-        console.log("Office size", tofficeList.length, ", Anywhere size:", tremoteList.length, ", Meeting size:", tmeetingList.length);
-        // }
-
-        setOfficeList(officeList => tofficeList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-        setRemoteList(remoteList => tremoteList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-        setMeetingList(meetingList => tmeetingList.map(record =>
-            <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li>
-        ));
-
-    }
-
-
     function storeAttendance(payload) {
 
-        // setPressedButton(payload);
         // add content type header to object
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -174,12 +177,10 @@ export default function AttendanceCard() {
 
     function handleButtonSubmit(payload) {
 
-        // console.log("Button pressed:", payload, "notes:", tempNotes);
         console.log("Button pressed:", payload, ", temp-notes:", tempNotes, ", notes:", notes);
-
         // send attendance if pressed button is different that current selection
         if (notesError === null && (payload !== pressedButton || tempNotes !== notes)) {
-            // setNotes(notes => tempNotes)
+            // setNotes(notes => tempNotes);
             // setTempNotes(tempNotes => notes)
             storeAttendance(payload);
             setShow(false);
@@ -191,15 +192,14 @@ export default function AttendanceCard() {
     function updateLocalAttendance(payload, newNotes) {
         console.log("Updating internal attendance, after button-press event", payload);
         var matchFlag = false;
-        for (const item of todaysAttendance) {
+        var newTodaysAt = [...todaysAttendance]
+        for (const item of newTodaysAt) {
             console.log("Current todayAttendance", item);
             if (item.SK === mail) {
                 matchFlag = true;
             }
             if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
-                // console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
                 console.log("Updated internal attendance of", mail, "from [", item.WorkLocation, "] to [", payload, "]");
-
                 item.WorkLocation = payload;
                 matchFlag = true;
             }
@@ -210,6 +210,7 @@ export default function AttendanceCard() {
                 matchFlag = true;
             }
 
+
         }
         if (!matchFlag) {
             // insert new entry
@@ -219,11 +220,11 @@ export default function AttendanceCard() {
                 "PK": getFormattedDate(),
                 "NOTES": newNotes
             }
-            todaysAttendance.push(obj);
+            newTodaysAt.push(obj);
         }
+        setTodaysAttendance(todaysAttendance => newTodaysAt)
 
-
-        updateAtLists();
+        // updateAtLists();
     }
 
 
@@ -235,13 +236,13 @@ export default function AttendanceCard() {
 
         if (value.length >= 30) {
             setNotesError(notesError => "Allowed length upto 30 char.")
-
         }
         if (value.search(/[*<{}>!@#$%^=]/i) >= 0) {
             setNotesError(notesError => "<{}>*!@#$%^* special chars not allowed.")
         }
 
     }
+
 
     return (
 
@@ -262,28 +263,40 @@ export default function AttendanceCard() {
                         <span className="badge bg-primary rounded-pill">{officeList.length}</span>
                     </li>
                     {officeList}
-                    {/* <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Office
-                        <span className="badge bg-primary rounded-pill">{officeListItems.length}</span>
-                    </li>
-                    {officeListItems} */}
+                    {/* {
+                        todaysAttendance.map(record =>
+                            record.WorkLocation === 'Office' ?
+                                <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
+                                null
+                        )
+                    } */}
+
 
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
                         <span className="badge bg-primary rounded-pill">{meetingList.length}</span>
                     </li>
                     {meetingList}
-                    {/* <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Meeting
-                        <span className="badge bg-primary rounded-pill">{meetingListItems.length}</span>
-                    </li>
-                    {meetingListItems} */}
+                    {/* {
 
-                    {/* <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Remote
-                        <span className="badge bg-primary rounded-pill">{anywhereListItems.length}</span>
-                    </li>
-                    {anywhereListItems} */}
+                        todaysAttendance.map(record =>
+                            record.WorkLocation === 'Meeting' ?
+                                <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
+                                null
+                        )
+                    } */}
+
                     <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Remote
                         <span className="badge bg-primary rounded-pill">{remoteList.length}</span>
                     </li>
                     {remoteList}
+
+                    {/* {
+                        todaysAttendance.map(record =>
+                            record.WorkLocation === 'Remote' ?
+                                <li key={record.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{record.SK}</li> :
+                                null
+                        )
+                    } */}
 
                 </ul>
 
@@ -298,26 +311,17 @@ export default function AttendanceCard() {
 
             <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
                 {/* <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>
-                        Submit
-                    </Offcanvas.Title>
+                    <Offcanvas.Title></Offcanvas.Title>
                 </Offcanvas.Header> */}
-                <Offcanvas.Body closeButton>
-                    <div id="notesHelpBlock" className="form-text">
-                        <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
-                        <p>
-                            optional notes eg. customer name, location or reason
-                        </p>
+                <Offcanvas.Body>
+                    <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
+                    <div id="notesHelpBlock" className="form-text p-2">
+                        Optional notes - customer name, location or reason.
                     </div>
                     <MyButton name="Office" className='btn btn-primary btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Meeting" className='btn btn-success btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <MyButton name="Remote" className='btn btn-warning btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                     <br></br>
-                    {/* <label for="inputPassword5" class="form-label">Password</label> */}
-                    {/* <input type="text" onChange={(e) => setNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
-                    {/* <input type="text" onChange={(e) => handleNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
-                    {/* <input type="text" onChange={(e) => setTempNotes(e.target.value)} id="inputPassword5" className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input> */}
-
                     <div id="notesErrorBlock" className="form-text text-danger">
                         {notesError}
                     </div>

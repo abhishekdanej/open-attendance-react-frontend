@@ -1,16 +1,114 @@
-import Button from "./Button";
+// import Button from "./Button";
 import MailInput from "./MailInput";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
-import MessageToast from "./MessageToast";
+import BottomNav from "./BottomNav.js";
+import { useNavigate, Route, Routes } from "react-router-dom";
+import MyAtPane from "./MyAtPane";
+import { getFormattedDate, getISOFormattedDate } from "./Utilities";
+// import MessageToast from "./MessageToast";
+
+export const MeContext = createContext();
+export const TeamContext = createContext();
 
 function App() {
 
-  // const [userLocation, setUserLocation] = useState();
+  const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
+  const navigate = useNavigate();
+
+  // ME
+  const [query, setQuery] = useState(null)
+  const [atHistory, setAtHistory] = useState({})
+  const querySet = new Set(["mcw","m2w"])
+
+  // TEAM
+  const [todaysAttendance, setTodaysAttendance] = useState([]);
+
+
+  useEffect(() => {
+    console.log("In useEffect mail")
+    if (!mail) {
+      console.log("Login not found, redirecting to Login page")
+      navigate("/login");
+    } else {
+      navigate("/team")
+
+      console.log("GET attendance attempt from server");
+
+      const fDate = getFormattedDate();
+
+      var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
+      url = url + "&mail=" + mail;
+
+      // working
+      fetch(url)
+          .then(response => response.json())
+          .then((result) => {
+              console.log("Received from server:", result.body);
+              console.log(JSON.stringify(result.body));
+
+              if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
+                  console.log("Received attendance is different than local attendance, updating local attendance.");
+                  setTodaysAttendance(result.body);
+                  // updateAtLists(result.body);
+              } else {
+                  console.log("Received attendance is same as local attendance");
+              }
+
+          })
+          .catch(error => console.log('FAILED to GET attendance, error', error));
+
+
+    }
+
+  }, [mail])
+
+
+  useEffect(() => {
+
+    console.log("In useEffect - query", query);
+    if (!mail) {
+      console.log("Login not found, redirecting to Login page")
+      navigate("/login");
+      return
+    }
+
+    console.log("GET query attendance attempt from server", query);
+
+    if (!querySet.has(query)) {
+      console.log("Invalid query", query, ", quitting.")
+      return
+    }
+
+    const date = getISOFormattedDate();
+
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
+    url = url + "&mail=" + mail;
+    url = url + "&query=" + query
+
+    // working
+    fetch(url)
+      .then(response => response.json())
+      .then((result) => {
+        console.log("Received from server:", result.body);
+        console.log(JSON.stringify(result.body));
+
+        if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+          console.log("Received attendance history is different than local attendance history, updating local attendance.");
+          setAtHistory(result.body);
+          // updateAtLists(result.body);
+        } else {
+          console.log("Received attendance history is same as local attendance history");
+        }
+
+      })
+      .catch(error => console.log('FAILED to GET attendance, error', error));
+
+  }, [query])
+
 
   // const [pressedButton, setPressedButton] = useState();
-  const [mail, setMail] = useState(JSON.parse(localStorage.getItem('mail')) || null);
   // const [mail, setMail] = useState(null);
 
   // const [todaysAttendance, setTodaysAttendance] = useState([]);
@@ -82,32 +180,32 @@ function App() {
   }
 */
 
-/*
-  function updateLocalAttendance(payload) {
-    console.log("Updating internal attendance, after button-press event", payload);
-    var matchFlag = false;
-    for (const item of todaysAttendance) {
-      console.log(item);
-      if (item.SK === mail) {
-        matchFlag = true;
+  /*
+    function updateLocalAttendance(payload) {
+      console.log("Updating internal attendance, after button-press event", payload);
+      var matchFlag = false;
+      for (const item of todaysAttendance) {
+        console.log(item);
+        if (item.SK === mail) {
+          matchFlag = true;
+        }
+        if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
+          console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
+          item.WorkLocation = payload;
+          matchFlag = true;
+        }
       }
-      if (item.SK === mail && item.PK === getFormattedDate() && item.WorkLocation !== payload) {
-        console.log("Updated internal attendance of", mail, "from", item.WorkLocation, "to", payload);
-        item.WorkLocation = payload;
-        matchFlag = true;
+      if (!matchFlag) {
+        // insert new entry
+        var obj = {
+          "SK": mail,
+          "WorkLocation": payload,
+          "PK": getFormattedDate()
+        }
+        todaysAttendance.push(obj);
       }
     }
-    if (!matchFlag) {
-      // insert new entry
-      var obj = {
-        "SK": mail,
-        "WorkLocation": payload,
-        "PK": getFormattedDate()
-      }
-      todaysAttendance.push(obj);
-    }
-  }
-  */
+    */
 
 
   /*
@@ -182,13 +280,20 @@ function App() {
 
   function handleMailClick(payload) {
 
-    setMail(payload);
+    // setMail(payload);
     localStorage.setItem('mail', JSON.stringify(payload));
     console.log('User input mail: ' + payload);
+    setMail(mail => payload)
+    navigate("/team")
     //getAttendanceData();
     // localStorage.setItem('mail', payload);
 
   }
+
+  // function handleQuerySelect(payload) {
+  //   console.log('User query select: ' + payload);
+  //   setQuery(payload)
+  // }
 
   /*
   function handleButtonSubmit(payload) {
@@ -211,18 +316,31 @@ function App() {
 
       <div className="container">
 
-        {!mail &&
+        {/* {!mail &&
           <MailInput onMailSubmit={handleMailClick} />
-        }
+        } */}
 
-        {mail &&
-          // <AttendanceCard mail={mail} value={todaysAttendance}></AttendanceCard>
-          <AttendanceCard ></AttendanceCard>
-        }
+        <Routes>
+          <Route path="/team" element={
+            <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance }}>
+              <AttendanceCard />
+            </TeamContext.Provider>
+
+          } />
+          {/* <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} /> */}
+          <Route path="/me" element={
+            <MeContext.Provider value={{ query, setQuery, atHistory, mail }}>
+              <MyAtPane />
+            </MeContext.Provider>
+          } />
+          <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
+        </Routes>
 
         <br></br>
         <br></br>
         <br></br>
+
+        <BottomNav></BottomNav>
 
       </div>
 
