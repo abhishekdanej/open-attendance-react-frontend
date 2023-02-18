@@ -20,7 +20,7 @@ function App() {
   // ME
   const [query, setQuery] = useState(null)
   const [atHistory, setAtHistory] = useState({})
-  const querySet = new Set(["mcw"])
+  const querySet = new Set(["mcw","m2w"])
 
   // TEAM
   const [todaysAttendance, setTodaysAttendance] = useState([]);

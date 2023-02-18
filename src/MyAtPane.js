@@ -13,7 +13,7 @@ export default function MyAtPane() {
     // const [atHistory, setAtHistory] = useState({})
     // const [query, setQuery] = useState()
 
-    const {query, setQuery, atHistory, mail} = useContext(MeContext)
+    const { query, setQuery, atHistory, mail } = useContext(MeContext)
 
 
     const colorClassKey = {
@@ -25,10 +25,10 @@ export default function MyAtPane() {
     useEffect(() => {
         console.log("In useEffect mail")
         if (!mail) {
-          console.log("Login not found, redirecting to Login page")
-          navigate("/login");
+            console.log("Login not found, redirecting to Login page")
+            navigate("/login");
         }
-      }, [mail])
+    }, [mail])
 
 
     /* WORKING
@@ -141,37 +141,40 @@ export default function MyAtPane() {
             <div className="card mb-3">
                 <img src="img1.jpg" className="card-img-top" alt="Group of friends" />
                 <div className="card-body">
-                    <h5 className="card-title">Limited Preview Feature</h5>
+                    <h5 className="card-title">Limited Preview</h5>
                     <p className="card-text">History of your work location (visible to you only).</p>
                 </div>
-                <div className="card-footer">
+                {/* <div className="card-footer">
                     <small className="text-muted">Last updated 3 mins ago</small>
-                </div>
+                </div> */}
             </div>
-
+            {/* style={{"color" : "white"}} */}
             <div className="card mb-3">
-                <div className="card-header">
-                    <h5 className="card-title">Make a Selection</h5>
+                <div className="card-header bg-primary">
+                    <h5 className="card-title " style={{ "color": "white" }}>Make a Selection</h5>
                 </div>
                 <div className="card-body">
                     {/* <h5 className="card-title">Make a Selection</h5> */}
                     <div className="d-flex justify-content-evenly btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input onChange={() => setQuery(query => "mcw")} type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={"mcw"===query? true : false} />
+                        <input onChange={() => setQuery(query => "mcw")} type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={"mcw" === query ? true : false} />
                         {/* <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check"  
                             name="mcw" id="btnradio1" autocomplete="off" checked={"mcw"===query? true : false} /> */}
                         <label className="btn btn-outline-secondary" htmlFor="btnradio1">1 Week</label>
 
-                        <input onChange={() => setQuery(query => "m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={"m2w"===query? true : false}/>
+                        <input onChange={() => setQuery(query => "m2w")} type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={"m2w" === query ? true : false} />
                         {/* <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check"  
                             name="m2w" id="btnradio2" autocomplete="off" checked={"m2w"===query? true : false}/> */}
                         <label className="btn btn-outline-secondary" htmlFor="btnradio2">2 Weeks</label>
 
-                        <input onChange={() => setQuery(query => "m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" checked={"m4w"===query? true : false}/>
+                        <input onChange={() => setQuery(query => "m4w")} type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" checked={"m4w" === query ? true : false} />
                         {/* <input onChange={(e) => handleQuerySelect(e.target.name)} type="radio" className="btn-check"  
                             name="m4w" id="btnradio3" autocomplete="off" checked={"m4w"===query? true : false}/> */}
                         <label className="btn btn-outline-secondary" htmlFor="btnradio3">4 weeks</label>
                     </div>
 
+                </div>
+                <div className="card-footer">
+                    <small className="text-muted">Attendance History</small>
                 </div>
 
             </div>
@@ -226,10 +229,10 @@ export default function MyAtPane() {
                 {
 
                     atHistory.WEEKDATA &&
-                    Object.keys(atHistory.WEEKDATA).map(record => (
+                    Object.keys(atHistory.WEEKDATA).sort().reverse().map(record => (
                         // console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
 
-                        < div key={atHistory.WEEKDATA[record].DATE} className="list-group-item list-group-item-action mb-2" >
+                        < div key={atHistory.WEEKDATA[record].DATE} className="list-group-item list-group-item-action" >
                             <div className="d-flex w-100 justify-content-between">
                                 <h5 className="mb-1 fs-6 badge bg-dark text-wrap">{new Date(atHistory.WEEKDATA[record].DATE).toDateString()}</h5>
                                 <h5 className={colorClassKey[atHistory.WEEKDATA[record].WORKLOCATION]}>{atHistory.WEEKDATA[record].WORKLOCATION}</h5>

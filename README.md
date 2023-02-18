@@ -9,6 +9,9 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+18 Feb 2023
+- Sorting of history
+
 16 Feb 2023
 - Performance improvement, moved state and data download to parent component. 
 

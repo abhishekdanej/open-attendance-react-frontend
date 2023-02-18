@@ -5,27 +5,33 @@ export default function BottomNav() {
   return (
 
 
-    <nav className="navbar fixed-bottom bg-white  border-top border-secondary-subtle">
+    <nav className="navbar fixed-bottom bg-white border-top border-secondary-subtle">
       <div className="container-fluid justify-content-around">
         <div className="row">
-          <div className="col">
-            <span className="navbar-text active">
-              <Link to="/team">👨‍👨‍👧‍👦</Link><br/>
-              Team
+          <div className="col ">
+            <span className="navbar-text">
+              <Link to="/team">
+                👨‍👨‍👧‍👦
+                <br />
+                Team
+              </Link>
             </span>
           </div>
 
-          <div className="col">
-            <span className="navbar-text">
-            </span>
-          </div>
+            <div className="col">
+              <span className="navbar-text">&nbsp;
+              </span>
+            </div>
 
-          <div className="col">
-            <span className="navbar-text">
-              <Link to="/me">🐵</Link><br/>
-              Me
-            </span>
-          </div>
+            <div className="col">
+              <span className="navbar-text">
+                <Link to="/me">
+                  🐵
+                  <br />
+                  Me
+                </Link>
+              </span>
+            </div>
         </div>
       </div>
     </nav>
