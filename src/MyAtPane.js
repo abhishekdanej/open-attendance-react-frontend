@@ -19,7 +19,8 @@ export default function MyAtPane() {
     const colorClassKey = {
         'Meeting': "mb-1 fs-6 badge bg-primary text-wrap",
         'Remote': "mb-1 fs-6 badge bg-warning text-wrap",
-        'Office': "mb-1 fs-6 badge bg-success text-wrap"
+        'Office': "mb-1 fs-6 badge bg-success text-wrap",
+        'Day Off': "mb-1 fs-6 badge bg-secondary text-wrap"
     }
 
     useEffect(() => {
