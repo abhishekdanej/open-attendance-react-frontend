@@ -11,6 +11,7 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 19 Feb 2023
 - Added Day Off to log leave
+- Added weekly Team View
 
 18 Feb 2023
 - Sorting of history
