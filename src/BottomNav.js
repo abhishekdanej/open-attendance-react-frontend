@@ -6,9 +6,9 @@ export default function BottomNav() {
 
 
     <nav className="navbar fixed-bottom bg-white border-top border-secondary-subtle">
-      <div className="container-fluid justify-content-around">
-        <div className="row">
-          <div className="col ">
+      <div className="container-fluid">
+        <div className="row d-flex flex-grow-1 justify-content-between">
+          <div className="col d-flex justify-content-center">
             <span className="navbar-text">
               <Link to="/team">
                 👨‍👨‍👧‍👦
@@ -19,7 +19,7 @@ export default function BottomNav() {
           </div>
 
 
-            <div className="col">
+            <div className="col d-flex justify-content-center">
               <span className="navbar-text">
                 <Link to="/me">
                   🐵
@@ -29,7 +29,7 @@ export default function BottomNav() {
               </span>
             </div>
 
-            <div className="col">
+            <div className="col d-flex justify-content-center">
               <span className="navbar-text">
               <Link to="/teamnew">
                   👯‍♂️
