@@ -11,6 +11,7 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 11 June 2023
 - Navbar button in center
+- 4 week history enabled (AWS Lambda)
 
 19 Feb 2023
 - Added Day Off to log leave
