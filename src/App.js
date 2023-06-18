@@ -5,12 +5,14 @@ import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav.js";
 import { useNavigate, Route, Routes } from "react-router-dom";
-import MyAtPane from "./MyAtPane";
+import HistoryPane from "./HistoryPane";
 import { getFormattedDate, getISOFormattedDate } from "./Utilities";
+import TeamPane from "./TeamPane";
 // import MessageToast from "./MessageToast";
 
 export const MeContext = createContext();
 export const TeamContext = createContext();
+export const Team2Context = createContext();
 
 function App() {
 
@@ -20,10 +22,13 @@ function App() {
   // ME
   const [query, setQuery] = useState(null)
   const [atHistory, setAtHistory] = useState({})
-  const querySet = new Set(["mcw","m2w"])
+  const querySet = new Set(["mcw", "m2w", "m4w", "tcw"])
 
   // TEAM
   const [todaysAttendance, setTodaysAttendance] = useState([]);
+
+  // TEAM NEW
+  const [ teamWeek, setTeamWeek] = useState([])
 
 
   useEffect(() => {
@@ -43,21 +48,21 @@ function App() {
 
       // working
       fetch(url)
-          .then(response => response.json())
-          .then((result) => {
-              console.log("Received from server:", result.body);
-              console.log(JSON.stringify(result.body));
+        .then(response => response.json())
+        .then((result) => {
+          console.log("Received from server:", result.body);
+          console.log(JSON.stringify(result.body));
 
-              if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
-                  console.log("Received attendance is different than local attendance, updating local attendance.");
-                  setTodaysAttendance(result.body);
-                  // updateAtLists(result.body);
-              } else {
-                  console.log("Received attendance is same as local attendance");
-              }
+          if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
+            console.log("Received attendance is different than local attendance, updating local attendance.");
+            setTodaysAttendance(result.body);
+            // updateAtLists(result.body);
+          } else {
+            console.log("Received attendance is same as local attendance");
+          }
 
-          })
-          .catch(error => console.log('FAILED to GET attendance, error', error));
+        })
+        .catch(error => console.log('FAILED to GET attendance, error', error));
 
 
     }
@@ -65,6 +70,53 @@ function App() {
   }, [mail])
 
 
+  // TEAM NEW
+  useEffect(() => {
+
+    console.log("In useEffect - teamWeek", teamWeek);
+    if (!mail) {
+      console.log("Login not found, redirecting to Login page")
+      navigate("/login");
+      return
+    }
+
+    const teamQuery = "tcw"
+
+    console.log("GET team history attendance attempt from server", teamQuery);
+
+    if (!querySet.has(teamQuery)) {
+      console.log("Invalid query", teamQuery, ", quitting.")
+      return
+    }
+
+    const date = getISOFormattedDate();
+
+    var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + date;
+    url = url + "&mail=" + mail;
+    url = url + "&query=" + teamQuery
+
+    // working
+    fetch(url)
+      .then(response => response.json())
+      .then((result) => {
+        console.log("Received from server:", result.body);
+        console.log(JSON.stringify(result.body));
+
+        if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+          console.log("Received team attendance history is different than local attendance history, updating local attendance.");
+          setTeamWeek(result.body);
+          // updateAtLists(result.body);
+        } else {
+          console.log("Received team attendance history is same as local attendance history");
+        }
+
+      })
+      .catch(error => console.log('FAILED to GET team attendance, error', error));
+
+  },[mail])
+
+
+  // ME
   useEffect(() => {
 
     console.log("In useEffect - query", query);
@@ -330,10 +382,16 @@ function App() {
           {/* <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} /> */}
           <Route path="/me" element={
             <MeContext.Provider value={{ query, setQuery, atHistory, mail }}>
-              <MyAtPane />
+              <HistoryPane />
             </MeContext.Provider>
           } />
           <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
+
+          <Route path="/teamnew" element={
+            <Team2Context.Provider value={{ mail, teamWeek }}>
+              <TeamPane />
+            </Team2Context.Provider>
+          } />
         </Routes>
 
         <br></br>

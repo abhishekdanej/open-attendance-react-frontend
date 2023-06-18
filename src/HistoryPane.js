@@ -19,7 +19,8 @@ export default function MyAtPane() {
     const colorClassKey = {
         'Meeting': "mb-1 fs-6 badge bg-primary text-wrap",
         'Remote': "mb-1 fs-6 badge bg-warning text-wrap",
-        'Office': "mb-1 fs-6 badge bg-success text-wrap"
+        'Office': "mb-1 fs-6 badge bg-success text-wrap",
+        'Day Off': "mb-1 fs-6 badge bg-secondary text-wrap"
     }
 
     useEffect(() => {
@@ -138,20 +139,33 @@ export default function MyAtPane() {
     return (
         <>
 
+            {/*
             <div className="card mb-3">
+                <div className="card-header bg-primary">
+                    <h5 className="card-title " style={{ "color": "white" }}>Week Calendar</h5>
+                </div>
+                <div className="card-body">
+                    <h5 className="card-title">History of your work location (visible to only you)</h5>
+                </div>
+
+            </div>
+
+
+             <div className="card mb-3">
                 <img src="img1.jpg" className="card-img-top" alt="Group of friends" />
                 <div className="card-body">
                     <h5 className="card-title">Limited Preview</h5>
                     <p className="card-text">History of your work location (visible to you only).</p>
                 </div>
-                {/* <div className="card-footer">
+                 <div className="card-footer">
                     <small className="text-muted">Last updated 3 mins ago</small>
-                </div> */}
-            </div>
-            {/* style={{"color" : "white"}} */}
+                </div> 
+            </div> */}
+
+
             <div className="card mb-3">
                 <div className="card-header bg-primary">
-                    <h5 className="card-title " style={{ "color": "white" }}>Make a Selection</h5>
+                    <h5 className="card-title " style={{ "color": "white" }}>Work History</h5>
                 </div>
                 <div className="card-body">
                     {/* <h5 className="card-title">Make a Selection</h5> */}

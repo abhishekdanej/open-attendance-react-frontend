@@ -13,7 +13,7 @@ export default function AttendanceCard() {
     const [show, setShow] = useState(false);
 
 
-    const {mail, todaysAttendance, setTodaysAttendance} = useContext(TeamContext)
+    const { mail, todaysAttendance, setTodaysAttendance } = useContext(TeamContext)
 
 
     const handleClose = () => {
@@ -37,6 +37,7 @@ export default function AttendanceCard() {
     const [remoteList, setRemoteList] = useState([]);
     const [officeList, setOfficeList] = useState([]);
     const [meetingList, setMeetingList] = useState([]);
+    const [dayoffList, setDayoffList] = useState([]);
     const [notes, setNotes] = useState(null);
     const [tempNotes, setTempNotes] = useState(null);
     const [notesError, setNotesError] = useState(null);
@@ -54,6 +55,7 @@ export default function AttendanceCard() {
         var mList = [];
         var rList = [];
         var oList = [];
+        var dList = [];
 
         for (const item of todaysAttendance) {
             console.log("COMPARING received [", item.SK, '] with local -', mail, fDate);
@@ -83,6 +85,7 @@ export default function AttendanceCard() {
             if (item.WorkLocation === 'Remote') rList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
             if (item.WorkLocation === 'Meeting') mList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
             if (item.WorkLocation === 'Office') oList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
+            if (item.WorkLocation === 'Day Off') dList.push(<li key={item.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{item.SK}</li>)
         }
 
         // setMeetingCount(meetingCount => mCount)
@@ -91,23 +94,28 @@ export default function AttendanceCard() {
         setMeetingList(meetingList => mList)
         setRemoteList(remoteList => rList)
         setOfficeList(officeList => oList)
+        setDayoffList(dayoffList => dList)
 
         // console.log("Office count:", oCount, ", Remote count:", rCount, ", Meeting count:", mCount);
-        console.log("Office size:", oList.length, ", Remote size:", rList.length, ", Meeting size:", mList.length);
+        console.log(
+            "Office size:", oList.length,
+            ", Remote size:", rList.length,
+            ", Meeting size:", mList.length,
+            ", Day Off size:", dList.length);
 
     }, [todaysAttendance]);
 
-    
+
 
     useEffect(() => {
 
         console.log("In useEffect - mail");
-        if(!mail) {
+        if (!mail) {
             console.log("Login not found, redirecting to Login page")
             navigate("/login");
             return
-          }
-        
+        }
+
         // console.log("GET attendance attempt from server");
 
         // const fDate = getFormattedDate();
@@ -298,6 +306,11 @@ export default function AttendanceCard() {
                         )
                     } */}
 
+                    <li className="list-group-item d-flex justify-content-between align-items-center list-group-item fs-4 fw-semibold">Day Off
+                        <span className="badge bg-primary rounded-pill">{dayoffList.length}</span>
+                    </li>
+                    {dayoffList}
+
                 </ul>
 
                 <div className="card-footer text-center">
@@ -318,10 +331,22 @@ export default function AttendanceCard() {
                     <div id="notesHelpBlock" className="form-text p-2">
                         Optional notes - customer name, location or reason.
                     </div>
-                    <MyButton name="Office" className='btn btn-primary btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                    <MyButton name="Meeting" className='btn btn-success btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                    <MyButton name="Remote" className='btn btn-warning btn-lg m-1 mb-3' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                    <br></br>
+                    <div class="d-flex flex-row ">
+                        <div class="d-grid pe-1 col-6 mx-auto">
+                            <MyButton name="Office" className='btn btn-primary btn-lg' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
+                        </div>
+                        <div class="d-grid ps-1 col-6 mx-auto">
+                            <MyButton name="Meeting" className='btn btn-success btn-lg' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row">
+                        <div class="d-grid pe-1 pt-2 col-6 mx-auto">
+                            <MyButton name="Remote" className='btn btn-warning btn-lg' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
+                        </div>
+                        <div class="d-grid ps-1 pt-2 col-6 mx-auto">
+                            <MyButton name="Day Off" className='btn btn-secondary btn-lg' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
+                        </div>
+                    </div>
                     <div id="notesErrorBlock" className="form-text text-danger">
                         {notesError}
                     </div>
