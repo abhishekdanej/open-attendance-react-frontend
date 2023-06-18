@@ -8,7 +8,8 @@ export default function BottomNav() {
     <nav className="navbar fixed-bottom bg-white border-top border-secondary-subtle">
       <div className="container-fluid">
         <div className="row d-flex flex-grow-1 justify-content-between">
-          <div className="col d-flex justify-content-center">
+
+          {/* <div className="col d-flex justify-content-center">
             <span className="navbar-text">
               <Link to="/team">
                 👨‍👨‍👧‍👦
@@ -16,28 +17,58 @@ export default function BottomNav() {
                 Team
               </Link>
             </span>
+          </div> */}
+
+          <div className="col d-flex justify-content-center">
+            <span className="navbar-text">
+              <div className="row">
+              <Link to="/team">
+              🎯
+              </Link>
+              </div>
+              <div className="row">
+                Today
+              </div>
+            </span>
           </div>
 
 
-            <div className="col d-flex justify-content-center">
-              <span className="navbar-text">
+          <div className="col d-flex justify-content-center">
+            <span className="navbar-text">
+              <div className="row">
                 <Link to="/me">
-                  🐵
-                  <br />
-                  Me
+                  📆
+                  {/* <br /> */}
                 </Link>
-              </span>
-            </div>
+              </div>
+              <div className="row">
+                History
+              </div>
+            </span>
+          </div>
 
-            <div className="col d-flex justify-content-center">
-              <span className="navbar-text">
+          <div className="col d-flex justify-content-center">
+            <span className="navbar-text">
+              <div className="row">
               <Link to="/teamnew">
-                  👯‍♂️
-                  <br />
-                  Team
-                </Link>
-              </span>
-            </div>
+              👯
+              </Link>
+              </div>
+              <div className="row">
+                Week
+              </div>
+            </span>
+          </div>
+
+          {/* <div className="col d-flex justify-content-center">
+            <span className="navbar-text">
+              <Link to="/teamnew">
+                👯‍♂️
+                <br />
+                Team
+              </Link>
+            </span>
+          </div> */}
 
         </div>
       </div>

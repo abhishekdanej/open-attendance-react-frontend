@@ -52,15 +52,16 @@ export default function TeamPane() {
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td><span class="badge border border-secondary rounded-pill text-secondary">M</span></td>
-                    <td><span class="badge border border-secondary rounded-pill text-secondary">T</span></td>
-                    <td><span class="badge border border-secondary rounded-pill text-secondary">W</span></td>
-                    <td><span class="badge border border-secondary rounded-pill text-secondary">T</span></td>
-                    <td><span class="badge border border-secondary rounded-pill text-secondary">F</span></td>
-                    <td><span class="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
-                    <td><span class="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary">M</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary">T</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary">W</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary">T</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary">F</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    {/* <td>&nbsp;</td> */}
+                    <td><small>🏆</small></td>
                 </tr>
             </tbody>
         )
@@ -164,7 +165,7 @@ export default function TeamPane() {
 
             </div>
 
-            <div class="list-group">
+            <div className="list-group">
 
                 {/* <div class="list-group-item list-group-item-action ps-2">
                     <span className="fw-bold">

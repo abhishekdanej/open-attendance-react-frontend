@@ -5,7 +5,7 @@ import AttendanceCard from "./AttendanceCard";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav.js";
 import { useNavigate, Route, Routes } from "react-router-dom";
-import MyAtPane from "./MyAtPane";
+import HistoryPane from "./HistoryPane";
 import { getFormattedDate, getISOFormattedDate } from "./Utilities";
 import TeamPane from "./TeamPane";
 // import MessageToast from "./MessageToast";
@@ -382,7 +382,7 @@ function App() {
           {/* <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} /> */}
           <Route path="/me" element={
             <MeContext.Provider value={{ query, setQuery, atHistory, mail }}>
-              <MyAtPane />
+              <HistoryPane />
             </MeContext.Provider>
           } />
           <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />

@@ -9,6 +9,10 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+18 June 2023
+- Changed nav icons
+- History Pane is live
+
 11 June 2023
 - Navbar button in center
 - 4 week history enabled (AWS Lambda)
