@@ -221,7 +221,7 @@ export default function TeamPane() {
                 {
                     teamWeek.map(person =>
 
-                        <div key={person['SK']} class="list-group-item list-group-item-action ps-2">
+                        <div key={person['SK']} className="list-group-item list-group-item-action ps-2">
                             <span className="fw-bold">
                                 {person['SK']}
                             </span>

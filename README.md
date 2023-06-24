@@ -11,6 +11,7 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 24 June 2023
 - fixed defect of Week Calendar
+- added date selection (WIP)
 
 18 June 2023
 - Changed nav icons
