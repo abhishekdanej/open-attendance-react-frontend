@@ -9,6 +9,9 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+24 June 2023
+- fixed defect of Week Calendar
+
 18 June 2023
 - Changed nav icons
 - History Pane is live
