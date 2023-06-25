@@ -30,17 +30,20 @@ export default function TeamPane() {
 
         const today = new Date()
         const weekDay = today.getDay()
-        console.log(today + " - " + weekDay)
-        // const days = 86400000 //number of milliseconds in a day
+        const days = 86400000 //number of milliseconds in a day
         var dateList = []
-        for (let i = 1; i <= 7; i++) {
+        for (let i=1; i<=7; i++) {
             console.log("preparing day", i)
             var k = new Date()
             // const diff = (i-weekDay)*days
             // console.log("diff " + diff)
             // var p = new Date(today - (7-i-weekDay)*days)
             // var p = new Date(today + ((i-weekDay)*days))
-            var p = new Date(k.setDate(today.getDate() + i - weekDay))
+
+            var p = new Date(today - (7-i-weekDay)*days)
+            var dateNum = p.getDate();
+
+            //var p = new Date(k.setDate(today.getDate() + i - weekDay))
             console.log("date for",i, "is",p)
             if (p.getDate()===today.getDate()) {
                 dateList.push(<td className="border-bottom border-secondary">{p.getDate()}</td>)

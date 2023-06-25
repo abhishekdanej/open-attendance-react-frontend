@@ -1,12 +1,8 @@
 // import Dropdown from 'react-bootstrap/Dropdown';
 import { useState, useEffect, useContext } from 'react';
 import { getUserFormattedDate, getFormattedDate, getISOFormattedDate } from "./Utilities";
+import DateSelectionModal from './AttendanceCard/DateSelectionModal';
 import Button from 'react-bootstrap/Button';
-import { Container, Dropdown, DropdownButton } from 'react-bootstrap';
-import ListGroup from 'react-bootstrap/ListGroup';
-// import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-// import AtButton from "./Button";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
 import { useNavigate } from 'react-router-dom';
@@ -258,14 +254,14 @@ export default function AttendanceCard() {
 
     }
 
-    function onDateSelection(value) {
-        const today = new Date()
+    function onDateSelection(selectedDate) {
+        // const today = new Date()
         // const weekDay = today.getDay()
-        console.log("selection", value)
+        console.log("selection", selectedDate)
 
-        var k = new Date()
-        var p = new Date(k.setDate(today.getDate() + value - today.getDay()))
-        const isoFormatDate = p.toISOString().substring(0, 10)
+        // var k = new Date()
+        // var p = new Date(k.setDate(today.getDate() + value - today.getDay()))
+        const isoFormatDate = selectedDate.toISOString().substring(0, 10)
         console.log("Selected date ISO format", isoFormatDate)
         setAttendanceDate(attendanceDate => isoFormatDate)
     }
@@ -395,61 +391,5 @@ function MyButton({ name, onButtonSubmit, pressedButton, className, disabled }) 
         <button type="button" disabled={disabled} onClick={() => onButtonSubmit(name)} className={className}>
             {name} {pressedButton === name ? '✔' : ''}
         </button>
-    );
-}
-
-
-function DateSelectionModal({ onSubmit, attendanceDate }) {
-
-    const [show, setShow] = useState(false);
-    
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-
-    const dateSelected = (value) => {
-        // alert('You clicked the third ListGroupItem');
-        onSubmit(value)
-        setShow(false)
-    };
-
-    const createDropdown = () => {
-        const today = new Date()
-        const weekDay = today.getDay()
-        console.log(today + " - " + weekDay)
-        const dateList = []
-        for (let i = 1; i <= weekDay; i++) {
-            var k = new Date()
-            var p = new Date(k.setDate(today.getDate() + i - weekDay))
-            console.log("date for", i, "is", p)
-            dateList.push(<ListGroup.Item key="i" action onClick={() => dateSelected(i)}>{p.toString().substring(0, 3)}, {p.getDate()}</ListGroup.Item>)
-        }
-
-        return dateList
-    }
-
-    const[dateList, setDateList] = useState(createDropdown)
-
-    // useEffect(() => createDropdown)
-
-
-    return (
-        <div className='pb-2'>
-            <Button variant="outline-dark" onClick={handleShow}>
-                {attendanceDate}
-            </Button>
-
-            <Modal show={show} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Select Date</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <ListGroup variant="flush">
-                        {dateList}
-                        {/* {createDropdown()} */}
-                    </ListGroup>
-                </Modal.Body>
-            </Modal>
-        </div>
     );
 }
