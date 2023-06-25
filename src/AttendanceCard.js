@@ -7,6 +7,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import MessageToast from "./MessageToast";
 import { useNavigate } from 'react-router-dom';
 import { TeamContext } from './App';
+import ButtonCanvas from './AttendanceCard/ButtonCanvas';
 
 export default function AttendanceCard() {
 
@@ -14,7 +15,7 @@ export default function AttendanceCard() {
     const [attendanceDate, setAttendanceDate] = useState(getISOFormattedDate());
 
 
-    const { mail, todaysAttendance, setTodaysAttendance } = useContext(TeamContext)
+    const { mail, todaysAttendance, setTodaysAttendance, teamWeek } = useContext(TeamContext)
 
 
     const handleClose = () => {
@@ -117,31 +118,6 @@ export default function AttendanceCard() {
             return
         }
 
-        // console.log("GET attendance attempt from server");
-
-        // const fDate = getFormattedDate();
-
-        // var url = "https://iiy5uzcet7.execute-api.ap-south-1.amazonaws.com/dev/attendance?date=" + fDate;
-        // url = url + "&mail=" + mail;
-
-        // 
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then((result) => {
-        //         console.log("Received from server:", result.body);
-        //         console.log(JSON.stringify(result.body));
-
-        //         if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
-        //             console.log("Received attendance is different than local attendance, updating local attendance.");
-        //             setTodaysAttendance(result.body);
-        //             // updateAtLists(result.body);
-        //         } else {
-        //             console.log("Received attendance is same as local attendance");
-        //         }
-
-        //     })
-        //     .catch(error => console.log('FAILED to GET attendance, error', error));
-
     }, [mail])
 
 
@@ -155,7 +131,8 @@ export default function AttendanceCard() {
             "mail": mail,
             "workLocation": payload,
             "date": getFormattedDate(),
-            "notes": tempNotes
+            "notes": tempNotes,
+            "attendanceDate": attendanceDate
         });
         // create a JSON object with parameters for API call and store in a variable
         var requestOptions = {
@@ -173,9 +150,9 @@ export default function AttendanceCard() {
             .then((result) => {
                 console.log("POST SUCCESS", JSON.parse(result).body);
                 setPressedButton(payload);
-                updateLocalAttendance(payload, tempNotes);
+                if(attendanceDate===getISOFormattedDate()) {updateLocalAttendance(payload, tempNotes);}
                 setShowFlag(true);
-                setNotes(tempNotes);
+                if(attendanceDate===getISOFormattedDate()) {setNotes(tempNotes);}
                 // alert(JSON.parse(result).body)
             }
             )
@@ -237,8 +214,6 @@ export default function AttendanceCard() {
     }
 
 
-
-
     function handleNotes(value) {
 
         value = value.trim()
@@ -264,13 +239,31 @@ export default function AttendanceCard() {
         const isoFormatDate = selectedDate.toISOString().substring(0, 10)
         console.log("Selected date ISO format", isoFormatDate)
         setAttendanceDate(attendanceDate => isoFormatDate)
+
+        console.log("Validating with history", teamWeek)
+
+        teamWeek.forEach(personWeek => {
+            console.log("In", personWeek.SK)
+            console.log(Object.values(personWeek.WEEKDATA))
+            if(mail === personWeek.SK) {
+                for (const day of Object.values(personWeek.WEEKDATA)) {
+                    console.log(isoFormatDate," - ",day["DATE"], day["NOTES"], day["WORKLOCATION"])
+                    if(isoFormatDate === day['DATE']) {
+                        console.log("Match found")
+                        // setNotes(notes => day['NOTES'])
+                        setTempNotes(tempNotes => day['NOTES'])
+                    }
+                }
+            }
+        })
+
+
     }
 
 
     return (
 
         <>
-
             <nav className="navbar justify-content-center">
                 <div className="badge bg-secondary text-wrap">
                     {getUserFormattedDate()}
@@ -337,10 +330,22 @@ export default function AttendanceCard() {
             </div >
 
 
-            <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
-                {/* <Offcanvas.Header closeButton>
-                    <Offcanvas.Title></Offcanvas.Title>
-                </Offcanvas.Header> */}
+            <ButtonCanvas 
+                show={show} 
+                handleClose={handleClose} 
+                onDateSelection={onDateSelection} 
+                attendanceDate={attendanceDate} 
+                handleNotes={handleNotes} 
+                notesError={notesError} 
+                pressedButton={pressedButton} 
+                handleButtonSubmit={handleButtonSubmit} 
+                MyButton={MyButton} 
+                notes={notes}>
+            </ButtonCanvas>
+            
+            
+            {/* <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
+
                 <Offcanvas.Body>
 
                     <div className='d-flex flex-row'>
@@ -365,21 +370,14 @@ export default function AttendanceCard() {
                             <MyButton name="Day Off" className='btn btn-secondary' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
                         </div>
                     </div>
-                    {/* <div class="d-flex flex-row">
-                        <div class="d-grid pe-1 pt-2 col-6 mx-auto">
-                            <MyButton name="Remote" className='btn btn-warning btn-lg' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                        </div>
-                        <div class="d-grid ps-1 pt-2 col-6 mx-auto">
-                            <MyButton name="Day Off" className='btn btn-secondary btn-lg' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                        </div>
-                    </div> */}
                     <div id="notesErrorBlock" className="form-text text-danger">
                         {notesError}
                     </div>
                 </Offcanvas.Body>
-            </Offcanvas>
+            </Offcanvas> */}
+            
 
-            <MessageToast showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast>
+            <MessageToast attendanceDate={attendanceDate} showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast>
 
         </>
     );

@@ -1,7 +1,7 @@
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
-function MessageToast({ showFlag, onToastClose }) {
+function MessageToast({ attendanceDate, showFlag, onToastClose }) {
 
     return (
         <ToastContainer position="bottom-center">
@@ -11,7 +11,7 @@ function MessageToast({ showFlag, onToastClose }) {
                     <strong className="me-auto">openverse</strong>
                     <small>now</small>
                 </Toast.Header>
-                <Toast.Body><span>Attendance Updated</span></Toast.Body>
+                <Toast.Body><span>Attendance Updated for {attendanceDate}</span></Toast.Body>
             </Toast>
         </ToastContainer>
     );
