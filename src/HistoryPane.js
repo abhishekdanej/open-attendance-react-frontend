@@ -13,7 +13,7 @@ export default function MyAtPane() {
     // const [atHistory, setAtHistory] = useState({})
     // const [query, setQuery] = useState()
 
-    const { query, setQuery, atHistory, mail } = useContext(MeContext)
+    const { query, setQuery, myHistory, mail } = useContext(MeContext)
 
 
     const colorClassKey = {
@@ -99,18 +99,18 @@ export default function MyAtPane() {
 
                 {
 
-                    atHistory.WEEKDATA &&
-                    Object.keys(atHistory.WEEKDATA).sort().reverse().map(record => (
+                    myHistory.WEEKDATA &&
+                    Object.keys(myHistory.WEEKDATA).sort().reverse().map(record => (
                         // console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
 
-                        < div key={atHistory.WEEKDATA[record].DATE} className="list-group-item list-group-item-action" >
+                        < div key={myHistory.WEEKDATA[record].DATE} className="list-group-item list-group-item-action" >
                             <div className="d-flex w-100 justify-content-between">
-                                <h5 className="mb-1 fs-6 badge bg-dark text-wrap">{new Date(atHistory.WEEKDATA[record].DATE).toDateString()}</h5>
-                                <h5 className={colorClassKey[atHistory.WEEKDATA[record].WORKLOCATION]}>{atHistory.WEEKDATA[record].WORKLOCATION}</h5>
+                                <h5 className="mb-1 fs-6 badge bg-dark text-wrap">{new Date(myHistory.WEEKDATA[record].DATE).toDateString()}</h5>
+                                <h5 className={colorClassKey[myHistory.WEEKDATA[record].WORKLOCATION]}>{myHistory.WEEKDATA[record].WORKLOCATION}</h5>
                                 {/* <h5 className="mb-1 fs-6 badge bg-success text-wrap">{ atHistory.WEEKDATA[record].WORKLOCATION }</h5> */}
                             </div>
                             <span className="mb-1">
-                                {atHistory.WEEKDATA[record].NOTES}
+                                {myHistory.WEEKDATA[record].NOTES}
                             </span>
                         </div>
 

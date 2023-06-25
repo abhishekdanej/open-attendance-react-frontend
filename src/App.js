@@ -21,10 +21,10 @@ function App() {
 
   // ME
   const [query, setQuery] = useState(null)
-  const [atHistory, setAtHistory] = useState({})
+  const [myHistory, setMyHistory] = useState({})
   const querySet = new Set(["mcw", "m2w", "m4w", "tcw"])
 
-  // TEAM
+  // HOME
   const [todaysAttendance, setTodaysAttendance] = useState([]);
 
   // TEAM NEW
@@ -56,7 +56,6 @@ function App() {
           if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
             console.log("Received attendance is different than local attendance, updating local attendance.");
             setTodaysAttendance(result.body);
-            // updateAtLists(result.body);
           } else {
             console.log("Received attendance is same as local attendance");
           }
@@ -102,10 +101,9 @@ function App() {
         console.log("Received from server for query [tcw]:", result.body);
         console.log(JSON.stringify(result.body));
 
-        if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+        if (JSON.stringify(result.body) !== JSON.stringify(myHistory)) {
           console.log("Received team attendance history is different than local attendance history, updating local attendance.");
           setTeamWeek(result.body);
-          // updateAtLists(result.body);
         } else {
           console.log("Received team attendance history is same as local attendance history");
         }
@@ -146,10 +144,9 @@ function App() {
         console.log("Received from server:", result.body);
         console.log(JSON.stringify(result.body));
 
-        if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
+        if (JSON.stringify(result.body) !== JSON.stringify(myHistory)) {
           console.log("Received attendance history is different than local attendance history, updating local attendance.");
-          setAtHistory(result.body);
-          // updateAtLists(result.body);
+          setMyHistory(result.body);
         } else {
           console.log("Received attendance history is same as local attendance history");
         }
@@ -189,18 +186,19 @@ function App() {
         } */}
 
         <Routes>
+          
           <Route path="/home" element={
             <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance, teamWeek }}>
               <AttendanceCard />
             </TeamContext.Provider>
-
           } />
-          {/* <Route path="/me" element={<MyAtPane handleQuerySelect={handleQuerySelect} query={query}/>} /> */}
+
           <Route path="/me" element={
-            <MeContext.Provider value={{ query, setQuery, atHistory, mail }}>
+            <MeContext.Provider value={{ query, setQuery, myHistory, mail }}>
               <HistoryPane />
             </MeContext.Provider>
           } />
+
           <Route path="/login" element={<MailInput onMailSubmit={handleMailClick} />} />
 
           <Route path="/teamnew" element={
@@ -208,6 +206,7 @@ function App() {
               <TeamPane />
             </Team2Context.Provider>
           } />
+
         </Routes>
 
         <br></br>
