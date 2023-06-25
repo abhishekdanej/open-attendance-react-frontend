@@ -250,7 +250,8 @@ export default function AttendanceCard() {
                     console.log(isoFormatDate," - ",day["DATE"], day["NOTES"], day["WORKLOCATION"])
                     if(isoFormatDate === day['DATE']) {
                         console.log("Match found")
-                        // setNotes(notes => day['NOTES'])
+                        setNotes(notes => day['NOTES'])
+                        setPressedButton(pressedButton => day["WORKLOCATION"]);
                         setTempNotes(tempNotes => day['NOTES'])
                     }
                 }

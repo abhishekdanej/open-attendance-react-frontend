@@ -19,6 +19,7 @@ export default function ButtonCanvas(
     }) {
 
 
+
     return (
         <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
         {/* <Offcanvas.Header closeButton>
@@ -27,15 +28,17 @@ export default function ButtonCanvas(
         <Offcanvas.Body>
 
             <div className='d-flex flex-row'>
-                <DateSelectionModal te onSubmit={onDateSelection} attendanceDate={attendanceDate}></DateSelectionModal>
+                <DateSelectionModal pressedButton={pressedButton} onSubmit={onDateSelection} attendanceDate={attendanceDate}></DateSelectionModal>
             </div>
 
-            <input type="text" 
+            <NotesInput handleNotes={handleNotes} notes={notes}></NotesInput>
+
+            {/* <input type="text" 
                 onChange={(e) => handleNotes(e.target.value)} 
                 className="form-control" 
                 aria-describedby="notesHelpBlock" 
                 placeholder={notes} 
-                aria-label="STAY TUNED"></input>
+                aria-label="STAY TUNED"></input> */}
             <div id="notesHelpBlock" className="form-text p-2">
                 Optional notes - customer name, location or reason.
             </div>
@@ -58,5 +61,17 @@ export default function ButtonCanvas(
             </div>
         </Offcanvas.Body>
     </Offcanvas>
+    )
+}
+
+function NotesInput({handleNotes, notes}) {
+
+    return (
+        <input type="text" 
+        onChange={(e) => handleNotes(e.target.value)} 
+        className="form-control" 
+        aria-describedby="notesHelpBlock" 
+        placeholder={notes} 
+        aria-label="STAY TUNED"></input>
     )
 }
