@@ -46,9 +46,9 @@ export default function TeamPane() {
             //var p = new Date(k.setDate(today.getDate() + i - weekDay))
             console.log("date for",i, "is",p)
             if (p.getDate()===today.getDate()) {
-                dateList.push(<td className="border-bottom border-secondary">{p.getDate()}</td>)
+                dateList.push(<td key={i} className="border-bottom border-secondary">{p.getDate()}</td>)
             } else {
-                dateList.push(<td>{p.getDate()}</td>)
+                dateList.push(<td key={i}>{p.getDate()}</td>)
             }
         }
         // if(weekDay===0) {dateList.push(<td></td>)}

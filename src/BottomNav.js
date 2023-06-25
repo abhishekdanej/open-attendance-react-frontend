@@ -22,7 +22,7 @@ export default function BottomNav() {
           <div className="col d-flex justify-content-center">
             <span className="navbar-text">
               <div className="row">
-              <Link to="/team">
+              <Link to="/home">
               🎯
               </Link>
               </div>

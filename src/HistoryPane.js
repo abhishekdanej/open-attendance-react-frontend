@@ -86,29 +86,6 @@ export default function MyAtPane() {
 
             <div className="list-group">
 
-
-                {/* <div className="list-group-item list-group-item-action mb-2">
-                    <div className="d-flex w-100 justify-content-between">
-                        <h5 className="mb-1 badge bg-dark text-wrap">14 Feb 2023, Tuesday</h5>
-                        <h5 className="mb-1 badge bg-primary text-wrap">Meeting</h5>
-                        <small class="text-muted">3 days ago</small>
-                    </div>
-                    <span className="mb-1">
-                        <span className="fw-bold">Meeting</span>: Implementation review at IDBI Bank. Implementation review at IDBI Bank.
-                    </span>
-                </div> */}
-
-                {/* <div className="list-group-item list-group-item-action mb-2">
-                    <div className="d-flex w-100 justify-content-between">
-                        <h5 className="mb-1 badge bg-dark text-wrap">13 Feb 2023, Monday</h5>
-                        <h5 className="mb-1 badge bg-warning text-wrap">Remote</h5>
-                    </div>
-                    <span className="mb-1">
-                        <span className="fw-bold">Remote</span>: SMAX VILT Training day 2.
-                    </span>
-                </div> */}
-
-
                 {/* <div className="list-group-item list-group-item-action mb-2">
                     <div className="d-flex w-100 justify-content-between">
                         <h5 className="mb-1 badge bg-dark text-wrap">12 Feb 2023, Monday</h5>
@@ -119,17 +96,6 @@ export default function MyAtPane() {
                         SMAX VILT Training day 2.
                     </span>
                 </div> */}
-
-                {/* <div className="list-group-item list-group-item-action mb-2">
-                    <div className="d-flex w-100 justify-content-between">
-                        <h5 className="mb-1 fs-6 badge bg-dark text-wrap">10 Feb 2023, Saturday</h5>
-                        <h5 className="mb-1 fs-6 badge bg-success text-wrap">Remote</h5>
-                    </div>
-                    <span className="mb-1">
-                        <span className="fw-bold">Remote</span>: Implementation review at IDBI Bank
-                    </span>
-                </div> */}
-
 
                 {
 

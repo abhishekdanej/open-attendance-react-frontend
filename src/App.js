@@ -37,7 +37,7 @@ function App() {
       console.log("Login not found, redirecting to Login page")
       navigate("/login");
     } else {
-      navigate("/team")
+      navigate("/home")
 
       console.log("GET attendance attempt from server");
 
@@ -50,7 +50,7 @@ function App() {
       fetch(url)
         .then(response => response.json())
         .then((result) => {
-          console.log("Received from server:", result.body);
+          console.log("Received from server (no query):", result.body);
           console.log(JSON.stringify(result.body));
 
           if (JSON.stringify(result.body) !== JSON.stringify(todaysAttendance)) {
@@ -70,7 +70,7 @@ function App() {
   }, [mail])
 
 
-  // TEAM NEW
+  // TEAM NEW - WEEK Pane
   useEffect(() => {
 
     console.log("In useEffect - teamWeek", teamWeek);
@@ -99,7 +99,7 @@ function App() {
     fetch(url)
       .then(response => response.json())
       .then((result) => {
-        console.log("Received from server:", result.body);
+        console.log("Received from server for query [tcw]:", result.body);
         console.log(JSON.stringify(result.body));
 
         if (JSON.stringify(result.body) !== JSON.stringify(atHistory)) {
@@ -116,7 +116,7 @@ function App() {
   },[mail])
 
 
-  // ME
+  // MY HISTORY
   useEffect(() => {
 
     console.log("In useEffect - query", query);
@@ -168,7 +168,7 @@ function App() {
     localStorage.setItem('mail', JSON.stringify(payload));
     console.log('User input mail: ' + payload);
     setMail(mail => payload)
-    navigate("/team")
+    navigate("/home")
     //getAttendanceData();
     // localStorage.setItem('mail', payload);
 
@@ -189,7 +189,7 @@ function App() {
         } */}
 
         <Routes>
-          <Route path="/team" element={
+          <Route path="/home" element={
             <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance, teamWeek }}>
               <AttendanceCard />
             </TeamContext.Provider>
