@@ -32,7 +32,7 @@ export default function TeamPane() {
         const weekDay = today.getDay()
         const days = 86400000 //number of milliseconds in a day
         var dateList = []
-        for (let i=1; i<=7; i++) {
+        /*for (let i=1; i<=7; i++) {
             console.log("preparing day", i)
             var k = new Date()
             // const diff = (i-weekDay)*days
@@ -50,8 +50,26 @@ export default function TeamPane() {
             } else {
                 dateList.push(<td key={i}>{p.getDate()}</td>)
             }
+        }*/
+
+
+        var diff = today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1);
+  
+        var startOfWeek = new Date(today.setDate(diff));
+        console.log ("startofweek", startOfWeek)
+
+        for (let i=0; i<=6; i++) {
+            console.log("preparing day", i)
+
+            var p = new Date(startOfWeek.getTime() + i*days)
+
+            console.log("date for [",i,"] is [",p,"]")
+            if (p.getDate()===today.getDate()) {
+                dateList.push(<td key={i} className="border-bottom border-secondary">{p.getDate()}</td>)
+            } else {
+                dateList.push(<td key={i}>{p.getDate()}</td>)
+            }
         }
-        // if(weekDay===0) {dateList.push(<td></td>)}
 
         return (
             <tbody>
@@ -99,19 +117,14 @@ export default function TeamPane() {
     function getDateBadge(i) {
 
         const today = new Date()
-        const weekDay = today.getDay()
+        // const weekDay = today.getDay()
         const days = 86400000 //number of milliseconds in a day
-        var p = new Date(today - (7-i-weekDay)*days)
+        // var p = new Date(today - (7-i-weekDay)*days)
+        // var dateNum = p.getDate();
+        var diff = today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1);
+        var startOfWeek = new Date(today.setDate(diff));
+        var p = new Date(startOfWeek.getTime() + (i-1)*days)
         var dateNum = p.getDate();
-        // for (let i = 1; i <= 7; i++) {
-        //     // console.log("preparing day", i)
-        //     console.log("date for",i, "is",p)
-        //     if (p.getDate()===today.getDate()) {
-        //         dateList.push(<td className="border-bottom border-secondary">{p.getDate()}</td>)
-        //     } else {
-        //         dateList.push(<td>{p.getDate()}</td>)
-        //     }
-        // }
 
 
         let className = ""
