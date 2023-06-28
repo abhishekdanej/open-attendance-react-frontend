@@ -9,6 +9,9 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+28 June 2023
+- fixed defect on underline of current day
+
 26 June 2023
 - completed past date attendance
 - fixed defect of Calendar days

@@ -29,42 +29,27 @@ export default function TeamPane() {
     function getWeekCalendar() {
 
         const today = new Date()
-        const weekDay = today.getDay()
+        const todayDay = today.getDay()
+        console.log("today", today)
+        // const weekDay = today.getDay()
         const days = 86400000 //number of milliseconds in a day
         var dateList = []
-        /*for (let i=1; i<=7; i++) {
-            console.log("preparing day", i)
-            var k = new Date()
-            // const diff = (i-weekDay)*days
-            // console.log("diff " + diff)
-            // var p = new Date(today - (7-i-weekDay)*days)
-            // var p = new Date(today + ((i-weekDay)*days))
-
-            var p = new Date(today - (7-i-weekDay)*days)
-            var dateNum = p.getDate();
-
-            //var p = new Date(k.setDate(today.getDate() + i - weekDay))
-            console.log("date for",i, "is",p)
-            if (p.getDate()===today.getDate()) {
-                dateList.push(<td key={i} className="border-bottom border-secondary">{p.getDate()}</td>)
-            } else {
-                dateList.push(<td key={i}>{p.getDate()}</td>)
-            }
-        }*/
-
 
         var diff = today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1);
   
         var startOfWeek = new Date(today.setDate(diff));
-        console.log ("startofweek", startOfWeek)
+        // console.log ("startofweek", startOfWeek)
 
         for (let i=0; i<=6; i++) {
             console.log("preparing day", i)
 
             var p = new Date(startOfWeek.getTime() + i*days)
 
-            console.log("date for [",i,"] is [",p,"]")
-            if (p.getDate()===today.getDate()) {
+            // console.log("date for [",i,"] is [",p,"]")
+            // console.log("p [",p.getDay(),"] today [",todayDay,"]")
+
+            if (p.getDay() === todayDay) {
+                // console.log("underline")
                 dateList.push(<td key={i} className="border-bottom border-secondary">{p.getDate()}</td>)
             } else {
                 dateList.push(<td key={i}>{p.getDate()}</td>)
@@ -135,9 +120,9 @@ export default function TeamPane() {
             className = "border-bottom border-secondary"
         }
         if (i >= 6) {
-            return <td className={className}><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
+            return <td key={i} className={className}><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
         }
-        return <td className={className}><small><span className="badge border border-secondary rounded-pill text-secondary">{dateNum}</span></small></td>
+        return <td key={i} className={className}><small><span className="badge border border-secondary rounded-pill text-secondary">{dateNum}</span></small></td>
     }
 
 
