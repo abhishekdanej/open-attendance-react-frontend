@@ -15,7 +15,8 @@ export default function AttendanceCard() {
     const [attendanceDate, setAttendanceDate] = useState(getISOFormattedDate());
 
 
-    const { mail, todaysAttendance, setTodaysAttendance, teamWeek, setRefreshCounter } = useContext(TeamContext)
+    // const { mail, todaysAttendance, setTodaysAttendance, teamWeek, setRefreshCounter } = useContext(TeamContext)
+    const { mail, teamWeek, setRefreshCounter } = useContext(TeamContext)
 
 
     const handleClose = () => {
@@ -44,7 +45,52 @@ export default function AttendanceCard() {
     const [tempNotes, setTempNotes] = useState(null);
     const [notesError, setNotesError] = useState(null);
 
+    // with teamWeek
+    useEffect(() => {
+        console.log("In useEffect teamWeek")
 
+        const fDate = getISOFormattedDate();
+        var mList = [];
+        var rList = [];
+        var oList = [];
+        var dList = [];
+
+        teamWeek.forEach(personWeek => {
+            console.log("iterating for person", personWeek.SK)
+
+            for (const day of Object.values(personWeek.WEEKDATA)) {
+                console.log("iterating",day["DATE"], day["NOTES"], day["WORKLOCATION"])
+                if (fDate === day['DATE']) {
+
+                    setNotes(notes => day["NOTES"])
+                    setTempNotes(tempNotes => day["NOTES"])
+                    setPressedButton(pressedButton => day["WORKLOCATION"])
+
+                    if (day['WORKLOCATION'] === 'Remote') rList.push(<li key={personWeek.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{personWeek.SK}</li>)
+                    if (day['WORKLOCATION'] === 'Meeting') mList.push(<li key={personWeek.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{personWeek.SK}</li>)
+                    if (day['WORKLOCATION'] === 'Office') oList.push(<li key={personWeek.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{personWeek.SK}</li>)
+                    if (day['WORKLOCATION'] === 'Day Off') dList.push(<li key={personWeek.SK} className="list-group-item fs-5">&nbsp;&nbsp;&nbsp;{personWeek.SK}</li>)
+
+                }
+            }
+
+        })
+
+        setMeetingList(meetingList => mList)
+        setRemoteList(remoteList => rList)
+        setOfficeList(officeList => oList)
+        setDayoffList(dayoffList => dList)
+
+        console.log(
+            "Office size:", oList.length,
+            ", Remote size:", rList.length,
+            ", Meeting size:", mList.length,
+            ", Day Off size:", dList.length);
+
+    }, [teamWeek])
+
+
+    /*
     useEffect(() => {
         // updateAtLists();
 
@@ -106,7 +152,7 @@ export default function AttendanceCard() {
             ", Day Off size:", dList.length);
 
     }, [todaysAttendance]);
-
+    */
 
 
     useEffect(() => {
@@ -150,9 +196,9 @@ export default function AttendanceCard() {
             .then((result) => {
                 console.log("POST SUCCESS", JSON.parse(result).body);
                 setPressedButton(payload);
-                if(attendanceDate===getISOFormattedDate()) {updateLocalAttendance(payload, tempNotes);}
+                // if (attendanceDate === getISOFormattedDate()) { updateLocalAttendance(payload, tempNotes); }
                 setShowFlag(true);
-                if(attendanceDate===getISOFormattedDate()) {setNotes(tempNotes);}
+                if (attendanceDate === getISOFormattedDate()) { setNotes(tempNotes); }
                 setRefreshCounter(Math.random())
                 // alert(JSON.parse(result).body)
             }
@@ -176,6 +222,7 @@ export default function AttendanceCard() {
     }
 
 
+    /*
     function updateLocalAttendance(payload, newNotes) {
         console.log("Updating internal attendance, after button-press event", payload);
         var matchFlag = false;
@@ -213,6 +260,7 @@ export default function AttendanceCard() {
 
         // updateAtLists();
     }
+    */
 
 
     function handleNotes(value) {
@@ -246,10 +294,10 @@ export default function AttendanceCard() {
         teamWeek.forEach(personWeek => {
             console.log("In", personWeek.SK)
             console.log(Object.values(personWeek.WEEKDATA))
-            if(mail === personWeek.SK) {
+            if (mail === personWeek.SK) {
                 for (const day of Object.values(personWeek.WEEKDATA)) {
-                    console.log(isoFormatDate," - ",day["DATE"], day["NOTES"], day["WORKLOCATION"])
-                    if(isoFormatDate === day['DATE']) {
+                    console.log(isoFormatDate, " - ", day["DATE"], day["NOTES"], day["WORKLOCATION"])
+                    if (isoFormatDate === day['DATE']) {
                         console.log("Match found")
                         setNotes(notes => day['NOTES'])
                         setPressedButton(pressedButton => day["WORKLOCATION"]);
@@ -332,52 +380,19 @@ export default function AttendanceCard() {
             </div >
 
 
-            <ButtonCanvas 
-                show={show} 
-                handleClose={handleClose} 
-                onDateSelection={onDateSelection} 
-                attendanceDate={attendanceDate} 
-                handleNotes={handleNotes} 
-                notesError={notesError} 
-                pressedButton={pressedButton} 
-                handleButtonSubmit={handleButtonSubmit} 
-                MyButton={MyButton} 
+            <ButtonCanvas
+                show={show}
+                handleClose={handleClose}
+                onDateSelection={onDateSelection}
+                attendanceDate={attendanceDate}
+                handleNotes={handleNotes}
+                notesError={notesError}
+                pressedButton={pressedButton}
+                handleButtonSubmit={handleButtonSubmit}
+                MyButton={MyButton}
                 notes={notes}>
             </ButtonCanvas>
-            
-            
-            {/* <Offcanvas show={show} onHide={handleClose} name='attendance-btn-offcanvas' placement='bottom'>
 
-                <Offcanvas.Body>
-
-                    <div className='d-flex flex-row'>
-                        <DateSelectionModal onSubmit={onDateSelection} attendanceDate={attendanceDate}></DateSelectionModal>
-                    </div>
-
-                    <input type="text" onChange={(e) => handleNotes(e.target.value)} className="form-control" aria-describedby="notesHelpBlock" placeholder={notes} aria-label="STAY TUNED"></input>
-                    <div id="notesHelpBlock" className="form-text p-2">
-                        Optional notes - customer name, location or reason.
-                    </div>
-                    <div className="d-flex flex-row">
-                        <div className="d-grid p-1 col-3 mx-auto">
-                            <MyButton name="Office" className='btn btn-primary' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                        </div>
-                        <div className="d-grid p-1 col-3 mx-auto">
-                            <MyButton name="Meeting" className='btn btn-success' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                        </div>
-                        <div className="d-grid p-1 col-3 mx-auto">
-                            <MyButton name="Remote" className='btn btn-warning' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                        </div>
-                        <div className="d-grid p-1 col-3 mx-auto">
-                            <MyButton name="Day Off" className='btn btn-secondary' onButtonSubmit={handleButtonSubmit} pressedButton={pressedButton} />
-                        </div>
-                    </div>
-                    <div id="notesErrorBlock" className="form-text text-danger">
-                        {notesError}
-                    </div>
-                </Offcanvas.Body>
-            </Offcanvas> */}
-            
 
             <MessageToast attendanceDate={attendanceDate} showFlag={showFlag} onToastClose={() => setShowFlag(false)} ></MessageToast>
 

@@ -9,6 +9,9 @@ This is a react frontend to a serverless attendance backend using below AWS serv
 
 ## Release Notes
 
+7 July 2023
+- used state object and removed todayAttendance obj
+
 28 June 2023
 - fixed defect on underline of current day
 

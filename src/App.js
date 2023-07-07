@@ -25,7 +25,7 @@ function App() {
   const querySet = new Set(["mcw", "m2w", "m4w", "tcw"])
 
   // HOME
-  const [todaysAttendance, setTodaysAttendance] = useState([]);
+  // const [todaysAttendance, setTodaysAttendance] = useState([]);
 
   // TEAM NEW
   const [ teamWeek, setTeamWeek] = useState([])
@@ -33,6 +33,7 @@ function App() {
   const [refreshCounter, setRefreshCounter] = useState(0)
 
 
+  /*
   useEffect(() => {
     console.log("In useEffect mail")
     if (!mail) {
@@ -69,6 +70,7 @@ function App() {
     }
 
   }, [mail])
+  */
 
 
   // TEAM NEW - WEEK Pane
@@ -190,7 +192,8 @@ function App() {
         <Routes>
           
           <Route path="/home" element={
-            <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance, teamWeek, setRefreshCounter }}>
+            // <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance, teamWeek, setRefreshCounter }}>
+            <TeamContext.Provider value={{ mail, teamWeek, setRefreshCounter }}>
               <AttendanceCard />
             </TeamContext.Provider>
           } />
