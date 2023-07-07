@@ -96,7 +96,7 @@ export default function TeamPane() {
             console.log("match found with calendar date", i)
             className = "border-bottom border-secondary"
         }
-        return <td className={className}><span className={colorClassKey[payload['WORKLOCATION']]}>{payload['WORKLOCATION'].substring(0, 1)}</span></td>
+        return <td key={i} className={className}><span className={colorClassKey[payload['WORKLOCATION']]}>{payload['WORKLOCATION'].substring(0, 1)}</span></td>
     }
 
     function getDateBadge(i) {

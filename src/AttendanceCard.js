@@ -15,7 +15,7 @@ export default function AttendanceCard() {
     const [attendanceDate, setAttendanceDate] = useState(getISOFormattedDate());
 
 
-    const { mail, todaysAttendance, setTodaysAttendance, teamWeek } = useContext(TeamContext)
+    const { mail, todaysAttendance, setTodaysAttendance, teamWeek, setRefreshCounter } = useContext(TeamContext)
 
 
     const handleClose = () => {
@@ -153,6 +153,7 @@ export default function AttendanceCard() {
                 if(attendanceDate===getISOFormattedDate()) {updateLocalAttendance(payload, tempNotes);}
                 setShowFlag(true);
                 if(attendanceDate===getISOFormattedDate()) {setNotes(tempNotes);}
+                setRefreshCounter(Math.random())
                 // alert(JSON.parse(result).body)
             }
             )

@@ -30,6 +30,8 @@ function App() {
   // TEAM NEW
   const [ teamWeek, setTeamWeek] = useState([])
 
+  const [refreshCounter, setRefreshCounter] = useState(0)
+
 
   useEffect(() => {
     console.log("In useEffect mail")
@@ -111,7 +113,7 @@ function App() {
       })
       .catch(error => console.log('FAILED to GET team attendance, error', error));
 
-  },[mail])
+  },[mail, refreshCounter])
 
 
   // MY HISTORY
@@ -188,7 +190,7 @@ function App() {
         <Routes>
           
           <Route path="/home" element={
-            <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance, teamWeek }}>
+            <TeamContext.Provider value={{ mail, todaysAttendance, setTodaysAttendance, teamWeek, setRefreshCounter }}>
               <AttendanceCard />
             </TeamContext.Provider>
           } />
