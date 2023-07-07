@@ -9,9 +9,6 @@ export default function MyAtPane() {
     //     return JSON.parse(localStorage.getItem('mail')) || null
     // })
     const navigate = useNavigate();
-    // const querySet = new Set(["mcw"])
-    // const [atHistory, setAtHistory] = useState({})
-    // const [query, setQuery] = useState()
 
     const { query, setQuery, myHistory, mail } = useContext(MeContext)
 
@@ -30,25 +27,6 @@ export default function MyAtPane() {
             navigate("/login");
         }
     }, [mail])
-
-
-    /* WORKING
-    useEffect(() => {
-
-        console.log("In useEffect - atHistory");
-
-        if (atHistory.WEEKDATA) {
-            console.log("Object keys")
-            console.log(Object.keys(atHistory.WEEKDATA))
-            Object.keys(atHistory.WEEKDATA).map(record => {
-                console.log("record", record.toString(), ":", atHistory.WEEKDATA[record].DATE)
-            })
-        }
-
-    }, [atHistory])
-    */
-
-
 
 
     return (

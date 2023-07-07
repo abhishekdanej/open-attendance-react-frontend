@@ -50,9 +50,9 @@ export default function TeamPane() {
 
             if (p.getDay() === todayDay) {
                 // console.log("underline")
-                dateList.push(<td key={i} className="border-bottom border-secondary">{p.getDate()}</td>)
+                dateList.push(<td key={i} className="border-bottom border-secondary text-center">{p.getDate()}</td>)
             } else {
-                dateList.push(<td key={i}>{p.getDate()}</td>)
+                dateList.push(<td key={i} className="text-center">{p.getDate()}</td>)
             }
         }
 
@@ -64,13 +64,13 @@ export default function TeamPane() {
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td><span className="badge border border-secondary rounded-pill text-secondary">M</span></td>
-                    <td><span className="badge border border-secondary rounded-pill text-secondary">T</span></td>
-                    <td><span className="badge border border-secondary rounded-pill text-secondary">W</span></td>
-                    <td><span className="badge border border-secondary rounded-pill text-secondary">T</span></td>
-                    <td><span className="badge border border-secondary rounded-pill text-secondary">F</span></td>
-                    <td><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
-                    <td><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary text-center">M</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary text-center">T</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary text-center">W</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary text-center">T</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-secondary text-center">F</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-bg-secondary text-center">S</span></td>
+                    <td><span className="badge border border-secondary rounded-pill text-bg-secondary text-center">S</span></td>
                     <td>&nbsp;</td>
                     {/* <td>&nbsp;</td> */}
                     <td><small>🏆</small></td>
@@ -89,12 +89,12 @@ export default function TeamPane() {
         // 4   4
         // 5   5
         // 6   6   (sat)
-        let className = ""
+        let className = "text-center"
         var d = new Date().getDay();
         if (d === 0) { d = 7 }
         if (d === i) {
             console.log("match found with calendar date", i)
-            className = "border-bottom border-secondary"
+            className = "border-bottom border-secondary text-center"
         }
         return <td key={i} className={className}><span className={colorClassKey[payload['WORKLOCATION']]}>{payload['WORKLOCATION'].substring(0, 1)}</span></td>
     }
@@ -112,12 +112,12 @@ export default function TeamPane() {
         var dateNum = p.getDate();
 
 
-        let className = ""
+        let className = "text-center"
         var d = new Date().getDay();
         if (d === 0) { d = 7 }
         if (d === i) {
             console.log("match found with calendar date", i)
-            className = "border-bottom border-secondary"
+            className = "border-bottom border-secondary text-center"
         }
         if (i >= 6) {
             return <td key={i} className={className}><span className="badge border border-secondary rounded-pill text-bg-secondary">S</span></td>
@@ -155,11 +155,11 @@ export default function TeamPane() {
 
         <>
 
-            <div className="card mb-3">
+            <div className="card mb-3 p-0">
                 <div className="card-header bg-primary">
                     <h5 className="card-title " style={{ "color": "white" }}>Week Calendar</h5>
                 </div>
-                <div className="card-body">
+                <div className="card-body p-0">
                     {/* <h5 className="card-title">Make a Selection</h5> */}
                     <table className="table table-borderless">
                         {getWeekCalendar()}

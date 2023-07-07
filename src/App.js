@@ -161,8 +161,6 @@ function App() {
   }, [query])
 
 
-
-
   function handleMailClick(payload) {
 
     // setMail(payload);
